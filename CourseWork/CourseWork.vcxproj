@@ -138,9 +138,6 @@
     <ClInclude Include="socialMedia.h" />
     <ClInclude Include="UserDB.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="draft.md" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -39,7 +39,4 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="draft.md" />
-  </ItemGroup>
 </Project>
