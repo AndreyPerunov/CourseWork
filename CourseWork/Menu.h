@@ -4,19 +4,19 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
+#include "Color.h"
 #include <conio.h>
 
 class Menu {
-public:
-	void print();
-private:
-	std::string colored(std::string text, std::string color);
-	std::vector<std::string> options = {
-		"Select database",
-		"Create database",
-		"Delete database",
-		"Quit",
-	};
+    public:
+        Menu(std::string data);
+        std::string navigate();
+        Menu* addChild(std::string data);
+    private:
+        void displayChildren(int selectedOption = 0);
+        std::string data;
+        std::vector<Menu*> childrens;
 };
 
 #endif // !_MENU_H_

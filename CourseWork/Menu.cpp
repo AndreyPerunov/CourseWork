@@ -1,50 +1,60 @@
 #include "Menu.h"
 
-
-void Menu::print() {
-	int selectedOption = 0;	
-	char key;
-	while (true)
-	{
-		system("cls");
-
-		for (int i = 0; i < Menu::options.size(); i++) {
-			if (selectedOption == i) {
-				std::cout << colored((">" + Menu::options[i]), "green") << '\n';
-			}
-			else {
-				std::cout << " " << Menu::options[i] << '\n';
-			}
-		}
-
-		key = _getch();
-		// arrow down key
-		if (key == 80 && selectedOption < Menu::options.size() - 1) { 
-			selectedOption++;
-		}
-		// arrow up key
-		if (key == 72 && selectedOption > 0) {
-			selectedOption--;
-		}
-		// enter key
-		if (key == '\r') {
-			std::cout	<< '\n'
-						<< "You have selected: " 
-						<< colored(Menu::options[selectedOption], "green")
-						<< '\n';
-			return;
-		}
-	}
+Menu::Menu(std::string data) {
+    Menu::data = data;
 }
 
-std::string Menu::colored(std::string text, std::string color) {
-	if (color == "black") return "\033[1;30m" + text + "\033[0m";
-	if (color == "red") return "\033[1;31m" + text + "\033[0m";
-	if (color == "green") return "\033[1;32m" + text + "\033[0m";
-	if (color == "yellow") return "\033[1;33m" + text + "\033[0m";
-	if (color == "blue") return "\033[1;34m" + text + "\033[0m";
-	if (color == "magenta") return "\033[1;35m" + text + "\033[0m";
-	if (color == "cyan") return "\033[1;36m" + text + "\033[0m";
-	if (color == "white") return "\033[1;37m" + text + "\033[0m";
-	return "Invalid color name!";
+Menu* Menu::addChild(std::string data) {
+    Menu* child = new Menu(data);
+    childrens.push_back(child);
+    return child;
+}
+
+std::string Menu::navigate() {
+    int selectedOption = 0;
+    char key;
+    Menu* currentMenu = this;
+    while (true) {
+        if (currentMenu->childrens.empty()) {
+            return (currentMenu->data);
+        }
+        system("cls");
+        std::cout << "Current menu: " << currentMenu->data << '\n';
+
+        currentMenu->displayChildren(selectedOption);
+
+        key = _getch();
+        // arrow down key
+        if (key == 80) {
+            if (selectedOption >= Menu::childrens.size() - 1) {
+                selectedOption = 0;
+            }
+            else {
+                selectedOption++;
+            }
+        }
+        // arrow up key
+        if (key == 72) {
+            if (selectedOption <= 0) {
+                selectedOption = Menu::childrens.size() - 1;
+            }
+            else {
+                selectedOption--;
+            }
+        }
+        // enter key
+        if (key == '\r') {
+            currentMenu = currentMenu->childrens[selectedOption];
+        }
+    }
+}
+
+void Menu::displayChildren(int selectedOption) {
+    for (size_t i = 0; i < childrens.size(); ++i) {
+        if (selectedOption == i) {
+            std::cout << '>' << colored(childrens[i]->data, "green") << '\n';
+        } else {
+            std::cout << ' ' << childrens[i]->data << '\n';
+        }
+    }
 }
