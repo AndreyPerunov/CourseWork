@@ -5,6 +5,8 @@
 #include <filesystem>
 #include <iostream>
 #include "UserDB.h"
+#include "Menu.h"
+#include "Color.h"
 
 class SocialMedia
 {

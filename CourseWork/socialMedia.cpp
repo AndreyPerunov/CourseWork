@@ -1,7 +1,47 @@
 #include "socialMedia.h"
 
+Menu* buildMenu() {
+    Menu* root = new Menu("Home");
+
+    // CREATE
+    Menu* createDB = root->addChild("Create DB");
+
+    // SELECT
+    Menu* selectDB = root->addChild("Select DB");
+    selectDB->addGoBack("Go back");
+
+    // DELETE
+    Menu* deleteDB = root->addChild("Delete DB");
+    deleteDB->addGoBack("Go back");
+
+    // QUIT
+    root->addChild("Quit");
+
+    return root;
+}
+
+std::string handleCreateDB() {
+    std::string title = "undefined";
+    std::cout << "Title: ";
+    std::cin >> title;
+    return title;
+}
+
 SocialMedia::SocialMedia() {
-    std::cout << "How wouold you like to call your social media database? ";
+    std::string flashMessage = "";
+    while (true)
+    {
+        std::string selectedOption = buildMenu()->navigate(flashMessage);
+        std::cout << '\n' + colored(selectedOption, "green") + '\n';
+        if (selectedOption == "Home/Create DB") {
+            flashMessage = colored("Database " + handleCreateDB() + " have been created.", "green");
+        }
+        if (selectedOption == "Home/Quit") {
+            break;
+        }
+    }
+
+    /*std::cout << "How wouold you like to call your social media database? ";
     std::cin >> SocialMedia::path;
 
     std::filesystem::path folder_path(SocialMedia::path);
@@ -14,7 +54,7 @@ SocialMedia::SocialMedia() {
     }
     catch (const std::filesystem::filesystem_error& e) {
         std::cerr << "Error creating folder: " << e.what() << '\n';
-    }
+    }*/
 
 }
 

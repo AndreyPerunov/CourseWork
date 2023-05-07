@@ -4,27 +4,46 @@ Menu::Menu(std::string data) {
     Menu::data = data;
 }
 
+Menu::Menu(std::string data, Menu* parent) {
+    Menu::data = data;
+    Menu::parent = parent;
+}
+
+
 Menu* Menu::addChild(std::string data) {
-    Menu* child = new Menu(data);
+    Menu* child = new Menu(data, this);
     childrens.push_back(child);
     return child;
 }
 
-std::string Menu::navigate() {
+void Menu::addGoBack(std::string data) {
+    Menu* child = new Menu(data, this);
+    child->goBack = true;
+    childrens.push_back(child);
+}
+
+
+std::string Menu::navigate(std::string flashMessage) {
     int selectedOption = 0;
     char key;
     Menu* currentMenu = this;
+    std::string path = currentMenu->data;
     while (true) {
+        // If edge - return
         if (currentMenu->childrens.empty()) {
-            return (currentMenu->data);
+            return path;
         }
-        system("cls");
-        std::cout << "Current menu: " << currentMenu->data << '\n';
 
+        system("cls");
+        std::cout << colored(path, "yellow") << '\n';
         currentMenu->displayChildren(selectedOption);
+        if (flashMessage != "") {
+            std::cout << '\n' << flashMessage << '\n';
+            flashMessage = "";
+        }        
 
         key = _getch();
-        // arrow down key
+        // Arrow down key
         if (key == 80) {
             if (selectedOption >= Menu::childrens.size() - 1) {
                 selectedOption = 0;
@@ -33,7 +52,7 @@ std::string Menu::navigate() {
                 selectedOption++;
             }
         }
-        // arrow up key
+        // Arrow up key
         if (key == 72) {
             if (selectedOption <= 0) {
                 selectedOption = Menu::childrens.size() - 1;
@@ -42,9 +61,20 @@ std::string Menu::navigate() {
                 selectedOption--;
             }
         }
-        // enter key
+        // Enter key
         if (key == '\r') {
-            currentMenu = currentMenu->childrens[selectedOption];
+            // Go back
+            if (currentMenu->childrens[selectedOption]->goBack) {
+                currentMenu = currentMenu->parent;
+                std::size_t pos = path.find_last_of('/');
+                path.erase(pos);
+            }
+            // Go deeper
+            else {
+                currentMenu = currentMenu->childrens[selectedOption];
+                path += '/' + currentMenu->data;
+            }
+            selectedOption = 0;
         }
     }
 }
@@ -52,7 +82,7 @@ std::string Menu::navigate() {
 void Menu::displayChildren(int selectedOption) {
     for (size_t i = 0; i < childrens.size(); ++i) {
         if (selectedOption == i) {
-            std::cout << '>' << colored(childrens[i]->data, "green") << '\n';
+            std::cout << colored('>'+childrens[i]->data, "green") << '\n';
         } else {
             std::cout << ' ' << childrens[i]->data << '\n';
         }
