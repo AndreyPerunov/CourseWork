@@ -4,18 +4,21 @@
 
 #include <filesystem>
 #include <iostream>
-#include "UserDB.h"
+#include <fstream>
+#include <regex>
 #include "Menu.h"
 #include "Color.h"
+#include "Users.h"
 
 class SocialMedia
 {
 public: 
 	SocialMedia();
-	bool deleteSocialMedia();
-	UserDB user();
+	bool deleteSocialMedia(std::string path);
 private:
-	std::string path = "";
+	Menu* buildMenu();
+	Menu* buildDBMenu(std::string title);
+	void editDB(std::string title);
 };
 
 #endif // !_SOCIALMEDIA_H_

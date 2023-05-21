@@ -1,6 +1,7 @@
-#include "socialMedia.h"
+#include "SocialMedia.h"
+namespace fs = std::filesystem;
 
-Menu* buildMenu() {
+Menu* SocialMedia::buildMenu() {
     Menu* root = new Menu("Home");
 
     // CREATE
@@ -8,10 +9,20 @@ Menu* buildMenu() {
 
     // SELECT
     Menu* selectDB = root->addChild("Select DB");
+    for (auto entry : fs::directory_iterator("./")) {
+        if (fs::is_directory(entry.status()) && entry.path() != "./x64") {
+            selectDB->addChild(entry.path().filename().string());
+        }
+    }
     selectDB->addGoBack("Go back");
 
     // DELETE
     Menu* deleteDB = root->addChild("Delete DB");
+    for (auto entry : fs::directory_iterator("./")) {
+        if (fs::is_directory(entry.status()) && entry.path() != "./x64") {
+            deleteDB->addChild(entry.path().filename().string());
+        }
+    }
     deleteDB->addGoBack("Go back");
 
     // QUIT
@@ -20,62 +31,158 @@ Menu* buildMenu() {
     return root;
 }
 
-std::string handleCreateDB() {
-    std::string title = "undefined";
-    std::cout << "Title: ";
-    std::cin >> title;
-    return title;
+Menu* SocialMedia::buildDBMenu(std::string title) {
+    Menu* root = new Menu(title);
+ 
+    Menu* users = root->addChild("Users");
+    users->addChild("create");
+    Menu* readOne = users->addChild("readOne");
+    readOne->addChild("by id");
+    readOne->addChild("by username");
+    readOne->addChild("by email");
+    users->addChild("readAll");
+    users->addChild("update");
+    users->addChild("delete");
+    users->addGoBack("Go back");
+
+    Menu* posts = root->addChild("Posts");
+    posts->addChild("create");
+    posts->addChild("readOne");
+    posts->addChild("readAll");
+    posts->addChild("readMany");
+    posts->addChild("update");
+    posts->addChild("delete");
+    posts->addGoBack("Go back");
+
+    Menu* postLikes = root->addChild("Post Likes");
+    Menu* messages = root->addChild("Messages");
+    Menu* follows = root->addChild("Follows");
+
+    root->addChild("Save All Data");
+    root->addChild("Home");
+
+    return root;
+}
+
+void SocialMedia::editDB(std::string title) {
+    try {
+        Users users("./" + title + "/");
+
+        std::string flashMessage = "";
+        while (true) {
+            std::string selectedOption = buildDBMenu(title)->navigate(flashMessage);
+            std::cout << '\n' + colored(selectedOption, "green") + '\n';
+            selectedOption = selectedOption.substr(title.length());
+
+            // ".../Users/create"
+            if (selectedOption == "/Users/create") {
+                User newUser = users.create();
+                flashMessage = colored((newUser.username), "green") + colored(" has been created.", "green");
+            }
+
+            // ".../Users/readOne/by id"
+            if (selectedOption == "/Users/readOne/by id") {
+                flashMessage = users.readOneById();
+            }
+
+            // ".../Users/readOne/by username"
+            if (selectedOption == "/Users/readOne/by username") {
+                flashMessage = users.readOneByUsername();
+            }
+
+            // ".../Users/readOne/by email"
+            if (selectedOption == "/Users/readOne/by email") {
+                flashMessage = users.readOneByEmail();
+            }
+
+            // ".../Users/readAll"
+            if (selectedOption == "/Users/readAll") {
+                flashMessage = users.readAll();
+            }
+
+            // ".../Save all data"
+            if (selectedOption == "/Save All Data") {
+                // TODO: others
+                flashMessage = users.save();
+            }
+
+            // ".../Home"
+            if (selectedOption == "/Home") break;
+        }
+    }
+    catch (std::exception e) {
+        std::cout << colored(e.what(), "red");
+        return;
+    }
 }
 
 SocialMedia::SocialMedia() {
     std::string flashMessage = "";
-    while (true)
-    {
+    while (true) {
         std::string selectedOption = buildMenu()->navigate(flashMessage);
         std::cout << '\n' + colored(selectedOption, "green") + '\n';
+
+        // "Home/Create DB"
         if (selectedOption == "Home/Create DB") {
-            flashMessage = colored("Database " + handleCreateDB() + " have been created.", "green");
+            std::string DBTitle = "undefined";
+            std::cout << "Title: ";
+            std::cin >> DBTitle;
+            fs::path folderPath(DBTitle);
+            try {
+                if (!fs::create_directory(folderPath)) {
+                    flashMessage = colored("Database '" + DBTitle + "' already exists.", "red");
+                }
+                else {
+                    flashMessage = colored("Database '" + DBTitle + "' have been created.", "green");
+                }
+            }
+            catch (fs::filesystem_error e) {
+                flashMessage = colored("Error creating folder: " + std::string(e.what()), "red");
+            }
         }
-        if (selectedOption == "Home/Quit") {
-            break;
+
+        // "Home/Select DB/"
+        std::regex selectPattern("Home\\/Select DB\\/([\\w\\s()-]+)");
+        std::smatch matchToSelect;
+        if (std::regex_search(selectedOption, matchToSelect, selectPattern)) {
+            if (fs::exists("./" + matchToSelect[1].str())) {
+                editDB(matchToSelect[1]);
+            }
+            else {
+                flashMessage = colored("Error selecting " + matchToSelect[1].str(), "red");
+            }
         }
+
+        // "Home/Delete DB/"
+        std::regex deletePattern("Home\\/Delete DB\\/([\\w\\s]+)");
+        std::smatch matchToDelete;
+        if (std::regex_search(selectedOption, matchToDelete, deletePattern)) {
+            if (SocialMedia::deleteSocialMedia(matchToDelete[1])) {
+                flashMessage = colored("Database '" + matchToDelete[1].str() + "' have been deleted.", "green");
+            }
+            else {
+                flashMessage = colored("Error deleting " + matchToDelete[1].str(), "red");
+            }
+        }
+        
+        // "Home/Quit"
+        if (selectedOption == "Home/Quit") break;
     }
-
-    /*std::cout << "How wouold you like to call your social media database? ";
-    std::cin >> SocialMedia::path;
-
-    std::filesystem::path folder_path(SocialMedia::path);
-
-    try {
-        if (!std::filesystem::create_directory(folder_path)) {
-            std::cout << "Folder '" << folder_path << "' already exists.\n";
-        }
-        SocialMedia::path = SocialMedia::path + '/';
-    }
-    catch (const std::filesystem::filesystem_error& e) {
-        std::cerr << "Error creating folder: " << e.what() << '\n';
-    }*/
-
 }
 
-bool SocialMedia::deleteSocialMedia() {
+bool SocialMedia::deleteSocialMedia(std::string path) {
     try {
-        if (std::filesystem::exists(SocialMedia::path) && std::filesystem::is_directory(SocialMedia::path)) {
-            std::filesystem::remove_all(SocialMedia::path);
+        if (fs::exists(path) && fs::is_directory(path)) {
+            fs::remove_all(path);
             return true;
         }
         else {
-            std::cerr << "The provided path does not exist or is not a directory." << std::endl;
+            // The provided path does not exist or is not a directory.
             return false;
         }
     }
-    catch (const std::filesystem::filesystem_error& e) {
-        std::cerr << "Filesystem error: " << e.what() << std::endl;
+    catch (const fs::filesystem_error& e) {
+        // Filesystem error
         return false;
     }
-}
-
-UserDB SocialMedia::user() {
-    UserDB obj(path);
-    return obj;
 }

@@ -130,16 +130,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="fort.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="socialMedia.cpp" />
-    <ClCompile Include="UserDB.cpp" />
+    <ClCompile Include="SocialMedia.cpp" />
+    <ClCompile Include="Users.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Color.h" />
+    <ClInclude Include="fort.h" />
+    <ClInclude Include="fort.hpp" />
     <ClInclude Include="Menu.h" />
-    <ClInclude Include="socialMedia.h" />
-    <ClInclude Include="UserDB.h" />
+    <ClInclude Include="SocialMedia.h" />
+    <ClInclude Include="Users.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

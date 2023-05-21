@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <filesystem>
 #include "Color.h"
 #include <conio.h>
 
@@ -14,7 +15,8 @@ class Menu {
         Menu(std::string data, Menu* parent);
         Menu* addChild(std::string data);
         void addGoBack(std::string data);
-        std::string navigate(std::string flashMessage = "");
+        std::string navigate();
+        std::string navigate(std::string &flashMessage);
     private:
         void displayChildren(int selectedOption = 0); // Be part of a class or be sepparate function?
         std::string data;

@@ -21,9 +21,7 @@ void Menu::addGoBack(std::string data) {
     child->goBack = true;
     childrens.push_back(child);
 }
-
-
-std::string Menu::navigate(std::string flashMessage) {
+std::string Menu::navigate() {
     int selectedOption = 0;
     char key;
     Menu* currentMenu = this;
@@ -37,15 +35,11 @@ std::string Menu::navigate(std::string flashMessage) {
         system("cls");
         std::cout << colored(path, "yellow") << '\n';
         currentMenu->displayChildren(selectedOption);
-        if (flashMessage != "") {
-            std::cout << '\n' << flashMessage << '\n';
-            flashMessage = "";
-        }        
-
+      
         key = _getch();
         // Arrow down key
         if (key == 80) {
-            if (selectedOption >= Menu::childrens.size() - 1) {
+            if (selectedOption >= currentMenu->childrens.size() - 1) {
                 selectedOption = 0;
             }
             else {
@@ -55,12 +49,68 @@ std::string Menu::navigate(std::string flashMessage) {
         // Arrow up key
         if (key == 72) {
             if (selectedOption <= 0) {
-                selectedOption = Menu::childrens.size() - 1;
+                selectedOption = currentMenu->childrens.size() - 1;
             }
             else {
                 selectedOption--;
             }
         }
+
+        // Enter key
+        if (key == '\r') {
+            // Go back
+            if (currentMenu->childrens[selectedOption]->goBack) {
+                currentMenu = currentMenu->parent;
+                std::size_t pos = path.find_last_of('/');
+                path.erase(pos);
+            }
+            // Go deeper
+            else {
+                currentMenu = currentMenu->childrens[selectedOption];
+                path += '/' + currentMenu->data;
+            }
+            selectedOption = 0;
+        }
+    }
+}
+
+std::string Menu::navigate(std::string &flashMessage) {
+    int selectedOption = 0;
+    char key;
+    Menu* currentMenu = this;
+    std::string path = currentMenu->data;
+    while (true) {
+        // If edge - return
+        if (currentMenu->childrens.empty()) {
+            return path;
+        }
+
+        system("cls");
+        std::cout << colored(path, "yellow") << '\n';
+        currentMenu->displayChildren(selectedOption);
+        std::cout << '\n' << flashMessage << '\n';
+        flashMessage = "";
+
+        key = _getch();
+        // Arrow down key
+        if (key == 80) {
+            if (selectedOption >= currentMenu->childrens.size() - 1) {
+                selectedOption = 0;
+            }
+            else {
+                selectedOption++;
+            }
+        }
+        // Arrow up key
+        if (key == 72) {
+            if (selectedOption <= 0) {
+                selectedOption = currentMenu->childrens.size() - 1;
+            }
+            else {
+                selectedOption--;
+            }
+        }
+        
         // Enter key
         if (key == '\r') {
             // Go back
