@@ -40,9 +40,19 @@ Menu* SocialMedia::buildDBMenu(std::string title) {
     readOne->addChild("by id");
     readOne->addChild("by username");
     readOne->addChild("by email");
-    users->addChild("readAll");
-    users->addChild("update");
-    users->addChild("delete");
+    Menu* readAll = users->addChild("readAll");
+    readAll->addChild("by id");
+    readAll->addChild("by username");
+    readAll->addChild("by email");
+    Menu* update = users->addChild("update");
+    update->addChild("by id");
+    update->addChild("by username");
+    update->addChild("by email");
+    Menu* deleteOne = users->addChild("delete");
+    deleteOne->addChild("by id");
+    deleteOne->addChild("by username");
+    deleteOne->addChild("by email");
+
     users->addGoBack("Go back");
 
     Menu* posts = root->addChild("Posts");
@@ -80,24 +90,60 @@ void SocialMedia::editDB(std::string title) {
                 flashMessage = colored((newUser.username), "green") + colored(" has been created.", "green");
             }
 
+            // READ ONE
             // ".../Users/readOne/by id"
             if (selectedOption == "/Users/readOne/by id") {
                 flashMessage = users.readOneById();
             }
-
             // ".../Users/readOne/by username"
             if (selectedOption == "/Users/readOne/by username") {
                 flashMessage = users.readOneByUsername();
             }
-
             // ".../Users/readOne/by email"
             if (selectedOption == "/Users/readOne/by email") {
                 flashMessage = users.readOneByEmail();
             }
 
-            // ".../Users/readAll"
-            if (selectedOption == "/Users/readAll") {
-                flashMessage = users.readAll();
+            // READ ALL
+            // ".../Users/readAll/by id"
+            if (selectedOption == "/Users/readAll/by id") {
+                flashMessage = users.readAllById();
+            }
+            // ".../Users/readAll/by username"
+            if (selectedOption == "/Users/readAll/by username") {
+                flashMessage = users.readAllByUsername();
+            }
+            // ".../Users/readAll/by email"
+            if (selectedOption == "/Users/readAll/by email") {
+                flashMessage = users.readAllByEmail();
+            }
+
+            // UPDATE
+            // ".../Users/update/by id"
+            if (selectedOption == "/Users/update/by id") {
+                flashMessage = users.updateById();
+            }
+            // ".../Users/update/by username"
+            if (selectedOption == "/Users/update/by username") {
+                flashMessage = users.updateByUsername();
+            }
+            // ".../Users/update/by email"
+            if (selectedOption == "/Users/update/by email") {
+                flashMessage = users.updateByEmail();
+            }
+
+            // DELETE
+            // ".../Users/delete/by id"
+            if (selectedOption == "/Users/delete/by id") {
+                flashMessage = users.deleteById();
+            }
+            // ".../Users/delete/by username"
+            if (selectedOption == "/Users/delete/by username") {
+                flashMessage = users.deleteByUsername();
+            }
+            // ".../Users/delete/by email"
+            if (selectedOption == "/Users/delete/by email") {
+                flashMessage = users.deleteByEmail();
             }
 
             // ".../Save all data"

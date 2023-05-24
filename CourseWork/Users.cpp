@@ -20,6 +20,22 @@ bool Users::emailExists(std::string email) {
     return false;
 }
 
+int Users::getId() {
+    std::string id;
+    std::regex pattern("[0-9]+");
+    while (true) {
+        std::cout << "Enter " << colored("id", "blue") << ": ";
+        std::getline(std::cin, id);
+        if (!std::regex_match(id, pattern)) {
+            std::cout << colored("ID contains only numbers.", "red") << '\n';
+        }
+        else {
+            break;
+        }
+    }
+    return stoi(id);
+}
+
 char* Users::getValidUsername() {
     std::string username;
     std::regex pattern("[a-zA-Z0-9]+");
@@ -153,7 +169,9 @@ Users::Users(std::string path) {
             usersFileRead.read(user.email, sizeof(user.email));
 			Users::users.push_back(user);
 		}
-        Users::lastId = Users::users.back().id;
+        if (!Users::users.empty()) {
+            Users::lastId = Users::users.back().id;
+        }
 	}
 	else {
 		// Else create a file
@@ -166,19 +184,24 @@ Users::Users(std::string path) {
 
 }
 
+User Users::create() {
+    char* username = Users::getValidUsername();
+    char* password = Users::getPassword();
+    char* email = Users::getValidEmail();
+
+    Users::lastId++;
+    User newUser;
+    newUser.id = Users::lastId;
+    strncpy_s(newUser.username, sizeof(newUser.username), username, _TRUNCATE);
+    strncpy_s(newUser.password, sizeof(newUser.password), password, _TRUNCATE);
+    strncpy_s(newUser.email, sizeof(newUser.email), email, _TRUNCATE);
+    Users::users.push_back(newUser);
+    return newUser;
+}
+
+//TODO: followers count; following count; post count
 std::string Users::readOneById() {
-    std::string idstring;
-    std::regex pattern("[0-9]+");
-    while (true) {
-        std::cout << "Enter id: ";
-        std::getline(std::cin, idstring);
-        if (!std::regex_match(idstring, pattern)) {
-            std::cout << colored("ID contains only numbers.", "red") << '\n';
-        } else {
-            break;
-        }
-    }
-    int id = stoi(idstring);
+    int id = Users::getId();
     for (User user : Users::users) {
         if (user.id == id) {
             fort::char_table table;
@@ -194,6 +217,7 @@ std::string Users::readOneById() {
     return colored("User does not exist.", "red");
 }
 
+//TODO: followers count; following count; post count
 std::string Users::readOneByUsername() {
     std::string username = Users::getUsername();
     for (User user : Users::users) {
@@ -211,6 +235,7 @@ std::string Users::readOneByUsername() {
     return colored("User does not exist.", "red");
 }
 
+//TODO: followers count; following count; post count
 std::string Users::readOneByEmail() {
     std::string email = Users::getEmail();
     for (User user : Users::users) {
@@ -228,7 +253,7 @@ std::string Users::readOneByEmail() {
     return colored("User does not exist.", "red");
 }
 
-std::string Users::readAll(){
+std::string Users::readAllById(){
     fort::char_table table;
 
     // Set Header
@@ -241,6 +266,228 @@ std::string Users::readAll(){
     }
 
     return table.to_string();
+}
+
+std::string Users::readAllByUsername() {
+    std::vector<User> copyUsers = Users::users;
+
+    // Sort
+    std::sort(copyUsers.begin(), copyUsers.end(), [](User a, User b) {
+        return strcmp(a.username, b.username) < 0;
+    });
+
+    // Create a table
+    fort::char_table table;
+
+    // Set Header
+    table << fort::header
+        << "ID" << "Username" << "Password" << "Email" << fort::endr;
+
+    // Set Content
+    for (User user : copyUsers) {
+        table << user.id << user.username << user.password << user.email << fort::endr;
+    }
+
+    return table.to_string();
+}
+
+std::string Users::readAllByEmail() {
+    std::vector<User> copyUsers = Users::users;
+
+    // Sort
+    std::sort(copyUsers.begin(), copyUsers.end(), [](User a, User b) {
+        return strcmp(a.email, b.email) < 0;
+        });
+
+    // Create a table
+    fort::char_table table;
+
+    // Set Header
+    table << fort::header
+        << "ID" << "Username" << "Password" << "Email" << fort::endr;
+
+    // Set Content
+    for (User user : copyUsers) {
+        table << user.id << user.username << user.password << user.email << fort::endr;
+    }
+
+    return table.to_string();
+}
+
+std::string Users::updateById() {
+    std::cout << Users::readAllById();
+    int id = Users::getId();
+    for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
+        if (it->id == id) {
+            std::string message = "";
+            std::string answer;
+            std::cout << "Whould you like to change the username? (y/n)";
+            std::getline(std::cin, answer);
+            if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
+                std::string oldUsername = it->username;
+                char* newUsername = getValidUsername();
+                strncpy_s(it->username, sizeof(it->username), newUsername, _TRUNCATE);
+                message += colored(std::string("Username ") + oldUsername + " has been changed to " + newUsername + ".\n", "green");
+            }
+            std::cout << "Whould you like to change the password? (y/n)";
+            std::getline(std::cin, answer);
+            if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
+                std::string oldPassword = it->password;
+                char* newPassword = getPassword();
+                strncpy_s(it->password, sizeof(it->password), newPassword, _TRUNCATE);
+                message += colored(std::string("Password ") + oldPassword + " has been changed to " + newPassword + ".\n", "green");
+            }
+            std::cout << "Whould you like to change the email? (y/n)";
+            std::getline(std::cin, answer);
+            if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
+                std::string oldEmail = it->email;
+                char* newEmail = getValidEmail();
+                strncpy_s(it->email, sizeof(it->email), newEmail, _TRUNCATE);
+                message += colored(std::string("Email ") + oldEmail + " has been changed to " + newEmail + ".\n", "green");
+            }
+
+            if (message == "") {
+                return colored("Nothing was changed.", "green");
+            }
+            else {
+                return message;
+            }
+        }
+    }
+
+    return colored("User does not exist.", "red");
+}
+
+std::string Users::updateByUsername() {
+    std::cout << Users::readAllByUsername();
+    char* username = Users::getUsername();
+    for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
+        if (strcmp(it->username, username) == 0) {
+            std::string message = "";
+            std::string answer;
+            std::cout << "Whould you like to change the username? (y/n)";
+            std::getline(std::cin, answer);
+            if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
+                std::string oldUsername = it->username;
+                char* newUsername = getValidUsername();
+                strncpy_s(it->username, sizeof(it->username), newUsername, _TRUNCATE);
+                message += colored(std::string("Username ") + oldUsername + " has been changed to " + newUsername + ".\n", "green");
+            }
+            std::cout << "Whould you like to change the password? (y/n)";
+            std::getline(std::cin, answer);
+            if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
+                std::string oldPassword = it->password;
+                char* newPassword = getPassword();
+                strncpy_s(it->password, sizeof(it->password), newPassword, _TRUNCATE);
+                message += colored(std::string("Password ") + oldPassword + " has been changed to " + newPassword + ".\n", "green");
+            }
+            std::cout << "Whould you like to change the email? (y/n)";
+            std::getline(std::cin, answer);
+            if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
+                std::string oldEmail = it->email;
+                char* newEmail = getValidEmail();
+                strncpy_s(it->email, sizeof(it->email), newEmail, _TRUNCATE);
+                message += colored(std::string("Email ") + oldEmail + " has been changed to " + newEmail + ".\n", "green");
+            }
+
+            if (message == "") {
+                return colored("Nothing was changed.", "green");
+            }
+            else {
+                return message;
+            }
+        }
+    }
+
+    return colored("User does not exist.", "red");
+}
+
+std::string Users::updateByEmail() {
+    std::cout << Users::readAllByEmail();
+    char* email = Users::getEmail();
+    for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
+        if (strcmp(it->email, email) == 0) {
+            std::string message = "";
+            std::string answer;
+            std::cout << "Whould you like to change the username? (y/n)";
+            std::getline(std::cin, answer);
+            if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
+                std::string oldUsername = it->username;
+                char* newUsername = getValidUsername();
+                strncpy_s(it->username, sizeof(it->username), newUsername, _TRUNCATE);
+                message += colored(std::string("Username ") + oldUsername + " has been changed to " + newUsername + ".\n", "green");
+            }
+            std::cout << "Whould you like to change the password? (y/n)";
+            std::getline(std::cin, answer);
+            if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
+                std::string oldPassword = it->password;
+                char* newPassword = getPassword();
+                strncpy_s(it->password, sizeof(it->password), newPassword, _TRUNCATE);
+                message += colored(std::string("Password ") + oldPassword + " has been changed to " + newPassword + ".\n", "green");
+            }
+            std::cout << "Whould you like to change the email? (y/n)";
+            std::getline(std::cin, answer);
+            if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
+                std::string oldEmail = it->email;
+                char* newEmail = getValidEmail();
+                strncpy_s(it->email, sizeof(it->email), newEmail, _TRUNCATE);
+                message += colored(std::string("Email ") + oldEmail + " has been changed to " + newEmail + ".\n", "green");
+            }
+
+            if (message == "") {
+                return colored("Nothing was changed.", "green");
+            }
+            else {
+                return message;
+            }
+        }
+    }
+
+    return colored("User does not exist.", "red");
+}
+
+// TODO: delete all the posts
+std::string Users::deleteById() {
+    std::cout << Users::readAllById();
+    int id = Users::getId();
+    for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
+        if (it->id == id) {
+            std::string username = it->username;
+            Users::users.erase(it);
+            return colored(std::string("User ") + username + " has been deleted.", "green");
+        }
+    }
+
+    return colored("User does not exist.", "red");
+}
+
+// TODO: delete all the posts
+std::string Users::deleteByUsername(){
+    std::cout << Users::readAllByUsername();
+    char* username = Users::getUsername();
+    for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
+        if (strcmp(it->username, username) == 0) {
+            Users::users.erase(it);
+            return colored(std::string("User ") + username + " has been deleted.", "green");
+        }
+    }
+
+    return colored("User does not exist.", "red");
+}
+
+// TODO: delete all the posts
+std::string Users::deleteByEmail(){
+    std::cout << Users::readAllByEmail();
+    char* email = Users::getEmail();
+    for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
+        if (strcmp(it->email, email) == 0) {
+            std::string username = it->username;
+            Users::users.erase(it);
+            return colored(std::string("User ") + username + " has been deleted.", "green");
+        }
+    }
+
+    return colored("User does not exist.", "red");
 }
 
 std::string Users::save() {
@@ -261,21 +508,6 @@ std::string Users::save() {
     usersFile.close();
 
     return colored("Users were saved successfully.", "green");
-}
-
-User Users::create() {
-    char* username = Users::getValidUsername();
-	char* password = Users::getPassword();
-	char* email = Users::getValidEmail();
-
-    Users::lastId++;
-    User newUser;
-    newUser.id = Users::lastId;
-    strncpy_s(newUser.username, sizeof(newUser.username), username, _TRUNCATE);
-    strncpy_s(newUser.password, sizeof(newUser.password), password, _TRUNCATE);
-    strncpy_s(newUser.email, sizeof(newUser.email), email, _TRUNCATE);
-	Users::users.push_back(newUser);
-    return newUser;
 }
 
 User::User() {

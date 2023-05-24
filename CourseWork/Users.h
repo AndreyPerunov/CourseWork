@@ -5,9 +5,10 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include "Color.h"
 #include <regex>
 #include <string>
+#include <cstring>
+#include "Color.h"
 #include "fort.hpp"
 
 struct User {
@@ -27,20 +28,26 @@ class Users
 		std::string readOneById();
 		std::string readOneByUsername();
 		std::string readOneByEmail();
-		std::string readAll();
-		std::string deleteOneByUsername();
-		std::string deleteOneByEmail();
-		std::string deleteAll();
+		std::string readAllById();
+		std::string readAllByUsername();
+		std::string readAllByEmail();
+		std::string updateById();
+		std::string updateByUsername();
+		std::string updateByEmail();
+		std::string deleteById();
+		std::string deleteByUsername();
+		std::string deleteByEmail();
 	private:
 		std::vector<User> users;
 		std::string path;
 		int lastId = 0;
 		char* stoc(std::string string);
 		bool usernameExists(std::string username);
+		bool emailExists(std::string username);
+		int getId();
 		char* getValidUsername();
 		char* getUsername();
 		char* getPassword();
-		bool emailExists(std::string username);
 		char* getValidEmail();
 		char* getEmail();
 };
