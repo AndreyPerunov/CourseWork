@@ -7,8 +7,9 @@
 #include <fstream>
 #include <regex>
 #include "Menu.h"
-#include "Color.h"
+#include "Functions.h"
 #include "Users.h"
+#include "Posts.h"
 
 class SocialMedia
 {

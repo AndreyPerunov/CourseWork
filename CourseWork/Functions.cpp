@@ -1,4 +1,4 @@
-#include "Color.h"
+#include "Functions.h"
 
 std::string colored(std::string text, std::string color) {
 	if (color == "black") return "\033[1;30m" + text + "\033[0m";
@@ -10,4 +10,10 @@ std::string colored(std::string text, std::string color) {
 	if (color == "cyan") return "\033[1;36m" + text + "\033[0m";
 	if (color == "white") return "\033[1;37m" + text + "\033[0m";
 	return "Invalid color name!";
+}
+
+char* stoc(std::string string) {
+	char* result = new char[string.length() + 1];
+	strcpy_s(result, string.length() + 1, string.c_str());
+	return result;
 }

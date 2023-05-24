@@ -36,29 +36,33 @@ Menu* SocialMedia::buildDBMenu(std::string title) {
  
     Menu* users = root->addChild("Users");
     users->addChild("create");
-    Menu* readOne = users->addChild("readOne");
-    readOne->addChild("by id");
-    readOne->addChild("by username");
-    readOne->addChild("by email");
-    Menu* readAll = users->addChild("readAll");
-    readAll->addChild("by id");
-    readAll->addChild("by username");
-    readAll->addChild("by email");
-    Menu* update = users->addChild("update");
-    update->addChild("by id");
-    update->addChild("by username");
-    update->addChild("by email");
-    Menu* deleteOne = users->addChild("delete");
-    deleteOne->addChild("by id");
-    deleteOne->addChild("by username");
-    deleteOne->addChild("by email");
+    Menu* readOneUser = users->addChild("readOne");
+    readOneUser->addChild("by id");
+    readOneUser->addChild("by username");
+    readOneUser->addChild("by email");
+    Menu* readAllUsers = users->addChild("readAll");
+    readAllUsers->addChild("by id");
+    readAllUsers->addChild("by username");
+    readAllUsers->addChild("by email");
+    Menu* updateUser = users->addChild("update");
+    updateUser->addChild("by id");
+    updateUser->addChild("by username");
+    updateUser->addChild("by email");
+    Menu* deleteOneUser = users->addChild("delete");
+    deleteOneUser->addChild("by id");
+    deleteOneUser->addChild("by username");
+    deleteOneUser->addChild("by email");
 
     users->addGoBack("Go back");
 
     Menu* posts = root->addChild("Posts");
     posts->addChild("create");
     posts->addChild("readOne");
-    posts->addChild("readAll");
+    Menu* readAllPosts = posts->addChild("readAll");
+    readAllPosts->addChild("by id");
+    readAllPosts->addChild("by title");
+    readAllPosts->addChild("by body");
+    readAllPosts->addChild("by author id");
     posts->addChild("readMany");
     posts->addChild("update");
     posts->addChild("delete");
@@ -68,8 +72,7 @@ Menu* SocialMedia::buildDBMenu(std::string title) {
     Menu* messages = root->addChild("Messages");
     Menu* follows = root->addChild("Follows");
 
-    root->addChild("Save All Data");
-    root->addChild("Home");
+     root->addChild("Home");
 
     return root;
 }
@@ -77,6 +80,7 @@ Menu* SocialMedia::buildDBMenu(std::string title) {
 void SocialMedia::editDB(std::string title) {
     try {
         Users users("./" + title + "/");
+        Posts posts("./" + title + "/");
 
         std::string flashMessage = "";
         while (true) {
@@ -84,12 +88,14 @@ void SocialMedia::editDB(std::string title) {
             std::cout << '\n' + colored(selectedOption, "green") + '\n';
             selectedOption = selectedOption.substr(title.length());
 
+            ///////////////////////
+            // USERS
+            ///////////////////////
             // ".../Users/create"
             if (selectedOption == "/Users/create") {
-                User newUser = users.create();
-                flashMessage = colored((newUser.username), "green") + colored(" has been created.", "green");
+                flashMessage = users.create();
             }
-
+            
             // READ ONE
             // ".../Users/readOne/by id"
             if (selectedOption == "/Users/readOne/by id") {
@@ -146,11 +152,20 @@ void SocialMedia::editDB(std::string title) {
                 flashMessage = users.deleteByEmail();
             }
 
-            // ".../Save all data"
-            if (selectedOption == "/Save All Data") {
-                // TODO: others
-                flashMessage = users.save();
+            ///////////////////////
+            // POSTS
+            ///////////////////////
+            // ".../Posts/create"
+            if (selectedOption == "/Posts/create") {
+                flashMessage = posts.create();
             }
+
+            // ".../Posts/readAll/by id"
+            if (selectedOption == "/Posts/readAll/by id") {
+                flashMessage = posts.readAllById();
+            }
+
+
 
             // ".../Home"
             if (selectedOption == "/Home") break;

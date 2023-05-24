@@ -8,11 +8,10 @@
 #include <regex>
 #include <string>
 #include <cstring>
-#include "Color.h"
+#include "Functions.h"
 #include "fort.hpp"
 
 struct User {
-	User();
 	int id;
 	char username[21];
 	char password[51];
@@ -23,7 +22,7 @@ class Users
 {
 	public:
 		Users(std::string path);
-		User create();
+		std::string create();
 		std::string save();
 		std::string readOneById();
 		std::string readOneByUsername();
@@ -37,11 +36,11 @@ class Users
 		std::string deleteById();
 		std::string deleteByUsername();
 		std::string deleteByEmail();
+		bool idExists(int id);
 	private:
 		std::vector<User> users;
 		std::string path;
 		int lastId = 0;
-		char* stoc(std::string string);
 		bool usernameExists(std::string username);
 		bool emailExists(std::string username);
 		int getId();

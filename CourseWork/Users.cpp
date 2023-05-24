@@ -1,17 +1,12 @@
 #include "Users.h"
 
-char* Users::stoc(std::string string) {
-    char* result = new char[string.length() + 1];
-    strcpy_s(result, string.length() + 1, string.c_str());
-    return result;
-}
-
 bool Users::usernameExists(std::string username) {
     for (User user : Users::users) {
         if (user.username == username) return true;
     }
     return false;
 }
+
 
 bool Users::emailExists(std::string email) {
     for (User user : Users::users) {
@@ -56,7 +51,7 @@ char* Users::getValidUsername() {
             std::cout << colored("Username already exists.", "red") << '\n';
         }
         else {
-            return Users::stoc(username);
+            return stoc(username);
         }
     }
 }
@@ -78,7 +73,7 @@ char* Users::getUsername() {
             std::cout << colored("Username must be at least 2 characters long.", "red") << '\n';
         }
         else {
-            return Users::stoc(username);
+            return stoc(username);
         }
     }
 }
@@ -100,7 +95,7 @@ char* Users::getPassword() {
             std::cout << colored("Password must be at least 7 characters long.", "red") << '\n';
         }
         else {
-            return Users::stoc(password);
+            return stoc(password);
         }
     }
 }
@@ -125,7 +120,7 @@ char* Users::getValidEmail() {
             std::cout << colored("Email already exists.", "red") << '\n';
         }
         else {
-            return Users::stoc(email);
+            return stoc(email);
         }
     }
 }
@@ -147,11 +142,17 @@ char* Users::getEmail() {
             std::cout << colored("Email must be at least 5 characters long.", "red") << '\n';
         }
         else {
-            return Users::stoc(email);
+            return stoc(email);
         }
     }
 }
 
+bool Users::idExists(int id) {
+    for (User user : Users::users) {
+        if (user.id == id) return true;
+    }
+    return false;
+}
 
 Users::Users(std::string path) {
 	Users::path = path;
@@ -181,10 +182,9 @@ Users::Users(std::string path) {
 		}
 		usersFileWrite.close();
 	}
-
 }
 
-User Users::create() {
+std::string Users::create() {
     char* username = Users::getValidUsername();
     char* password = Users::getPassword();
     char* email = Users::getValidEmail();
@@ -196,7 +196,9 @@ User Users::create() {
     strncpy_s(newUser.password, sizeof(newUser.password), password, _TRUNCATE);
     strncpy_s(newUser.email, sizeof(newUser.email), email, _TRUNCATE);
     Users::users.push_back(newUser);
-    return newUser;
+    Users::save();
+
+    return colored((newUser.username), "green") + colored(" has been created.", "green");;
 }
 
 //TODO: followers count; following count; post count
@@ -350,6 +352,7 @@ std::string Users::updateById() {
                 return colored("Nothing was changed.", "green");
             }
             else {
+                Users::save();
                 return message;
             }
         }
@@ -394,6 +397,7 @@ std::string Users::updateByUsername() {
                 return colored("Nothing was changed.", "green");
             }
             else {
+                Users::save();
                 return message;
             }
         }
@@ -438,6 +442,7 @@ std::string Users::updateByEmail() {
                 return colored("Nothing was changed.", "green");
             }
             else {
+                Users::save();
                 return message;
             }
         }
@@ -454,6 +459,7 @@ std::string Users::deleteById() {
         if (it->id == id) {
             std::string username = it->username;
             Users::users.erase(it);
+            Users::save();
             return colored(std::string("User ") + username + " has been deleted.", "green");
         }
     }
@@ -468,6 +474,7 @@ std::string Users::deleteByUsername(){
     for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
         if (strcmp(it->username, username) == 0) {
             Users::users.erase(it);
+            Users::save();
             return colored(std::string("User ") + username + " has been deleted.", "green");
         }
     }
@@ -483,6 +490,7 @@ std::string Users::deleteByEmail(){
         if (strcmp(it->email, email) == 0) {
             std::string username = it->username;
             Users::users.erase(it);
+            Users::save();
             return colored(std::string("User ") + username + " has been deleted.", "green");
         }
     }
@@ -508,8 +516,4 @@ std::string Users::save() {
     usersFile.close();
 
     return colored("Users were saved successfully.", "green");
-}
-
-User::User() {
-
 }
