@@ -1,12 +1,41 @@
 #include "Users.h"
 
+Users::Users(std::string path) {
+	Users::path = path;
+
+	std::string filename = "user.bin";
+	std::ifstream usersFileRead(path + filename, std::ios::binary);
+
+	if (usersFileRead.is_open()) {
+		// If file already exists read data in vector
+		User user;
+		while (usersFileRead.peek() != EOF) {
+            usersFileRead.read((char*)&user.id, sizeof(user.id));
+            usersFileRead.read(user.username, sizeof(user.username));
+            usersFileRead.read(user.password, sizeof(user.password));
+            usersFileRead.read(user.email, sizeof(user.email));
+			Users::users.push_back(user);
+		}
+        if (!Users::users.empty()) {
+            Users::lastId = Users::users.back().id;
+        }
+	}
+	else {
+		// Else create a file
+		std::ofstream usersFileWrite(path + filename, std::ios::binary);
+		if (!usersFileWrite.is_open()) {
+			throw std::runtime_error("Error creating " + filename + "!");
+		}
+		usersFileWrite.close();
+	}
+}
+
 bool Users::usernameExists(std::string username) {
     for (User user : Users::users) {
         if (user.username == username) return true;
     }
     return false;
 }
-
 
 bool Users::emailExists(std::string email) {
     for (User user : Users::users) {
@@ -154,36 +183,14 @@ bool Users::idExists(int id) {
     return false;
 }
 
-Users::Users(std::string path) {
-	Users::path = path;
-
-	std::string filename = "user.bin";
-	std::ifstream usersFileRead(path + filename, std::ios::binary);
-
-	if (usersFileRead.is_open()) {
-		// If file already exists read data in vector
-		User user;
-		while (usersFileRead.peek() != EOF) {
-            usersFileRead.read((char*)&user.id, sizeof(user.id));
-            usersFileRead.read(user.username, sizeof(user.username));
-            usersFileRead.read(user.password, sizeof(user.password));
-            usersFileRead.read(user.email, sizeof(user.email));
-			Users::users.push_back(user);
-		}
-        if (!Users::users.empty()) {
-            Users::lastId = Users::users.back().id;
-        }
-	}
-	else {
-		// Else create a file
-		std::ofstream usersFileWrite(path + filename, std::ios::binary);
-		if (!usersFileWrite.is_open()) {
-			throw std::runtime_error("Error creating " + filename + "!");
-		}
-		usersFileWrite.close();
-	}
+std::string Users::getUsernameById(int id) {
+    for (User user : Users::users) {
+        if (user.id == id) return user.username;
+    }
+    return colored("User not found!", "red");
 }
 
+// Create
 std::string Users::create() {
     char* username = Users::getValidUsername();
     char* password = Users::getPassword();
@@ -201,16 +208,18 @@ std::string Users::create() {
     return colored((newUser.username), "green") + colored(" has been created.", "green");;
 }
 
-//TODO: followers count; following count; post count
+// Read One
+//TODO: followers count; following count
 std::string Users::readOneById() {
+    Posts posts(Users::path);
     int id = Users::getId();
     for (User user : Users::users) {
         if (user.id == id) {
             fort::char_table table;
 
             table << fort::header
-                << "ID" << "Username" << "Password" << "Email" << fort::endr
-                << user.id << user.username << user.password << user.email << fort::endr;
+                << "ID" << "Username" << "Password" << "Email" << "Posts" << fort::endr
+                << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << fort::endr;
 
             return table.to_string();
         }
@@ -219,16 +228,17 @@ std::string Users::readOneById() {
     return colored("User does not exist.", "red");
 }
 
-//TODO: followers count; following count; post count
+//TODO: followers count; following count
 std::string Users::readOneByUsername() {
+    Posts posts(Users::path);
     std::string username = Users::getUsername();
     for (User user : Users::users) {
         if (user.username == username) {
             fort::char_table table;
 
             table << fort::header
-                << "ID" << "Username" << "Password" << "Email" << fort::endr
-                << user.id << user.username << user.password << user.email << fort::endr;
+                << "ID" << "Username" << "Password" << "Email" << "Posts" << fort::endr
+                << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << fort::endr;
 
             return table.to_string();
         }
@@ -237,16 +247,17 @@ std::string Users::readOneByUsername() {
     return colored("User does not exist.", "red");
 }
 
-//TODO: followers count; following count; post count
+//TODO: followers count; following count
 std::string Users::readOneByEmail() {
+    Posts posts(Users::path);
     std::string email = Users::getEmail();
     for (User user : Users::users) {
         if (user.email == email) {
             fort::char_table table;
 
             table << fort::header
-                << "ID" << "Username" << "Password" << "Email" << fort::endr
-                << user.id << user.username << user.password << user.email << fort::endr;
+                << "ID" << "Username" << "Password" << "Email" << "Posts" << fort::endr
+                << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << fort::endr;
 
             return table.to_string();
         }
@@ -255,22 +266,29 @@ std::string Users::readOneByEmail() {
     return colored("User does not exist.", "red");
 }
 
+// Read All
+//TODO: followers count; following count
 std::string Users::readAllById(){
+    Posts posts(Users::path);
+
     fort::char_table table;
 
     // Set Header
     table << fort::header
-        << "ID" << "Username" << "Password" << "Email" << fort::endr;
+        << "ID" << "Username" << "Password" << "Email" << "Posts" << fort::endr;
 
     // Set Content
     for (User user : Users::users) {
-        table << user.id << user.username << user.password << user.email << fort::endr;
+        table << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << fort::endr;
     }
 
     return table.to_string();
 }
 
+//TODO: followers count; following count
 std::string Users::readAllByUsername() {
+    Posts posts(Users::path);
+
     std::vector<User> copyUsers = Users::users;
 
     // Sort
@@ -283,17 +301,20 @@ std::string Users::readAllByUsername() {
 
     // Set Header
     table << fort::header
-        << "ID" << "Username" << "Password" << "Email" << fort::endr;
+        << "ID" << "Username" << "Password" << "Email" << "Posts" << fort::endr;
 
     // Set Content
     for (User user : copyUsers) {
-        table << user.id << user.username << user.password << user.email << fort::endr;
+        table << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << fort::endr;
     }
 
     return table.to_string();
 }
 
+//TODO: followers count; following count
 std::string Users::readAllByEmail() {
+    Posts posts(Users::path);
+
     std::vector<User> copyUsers = Users::users;
 
     // Sort
@@ -306,16 +327,17 @@ std::string Users::readAllByEmail() {
 
     // Set Header
     table << fort::header
-        << "ID" << "Username" << "Password" << "Email" << fort::endr;
+        << "ID" << "Username" << "Password" << "Email" << "Posts" << fort::endr;
 
     // Set Content
     for (User user : copyUsers) {
-        table << user.id << user.username << user.password << user.email << fort::endr;
+        table << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << fort::endr;
     }
 
     return table.to_string();
 }
 
+// Update
 std::string Users::updateById() {
     std::cout << Users::readAllById();
     int id = Users::getId();
@@ -323,7 +345,7 @@ std::string Users::updateById() {
         if (it->id == id) {
             std::string message = "";
             std::string answer;
-            std::cout << "Whould you like to change the username? (y/n)";
+            std::cout << "Whould you like to change the username? (y/n): ";
             std::getline(std::cin, answer);
             if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
                 std::string oldUsername = it->username;
@@ -331,7 +353,7 @@ std::string Users::updateById() {
                 strncpy_s(it->username, sizeof(it->username), newUsername, _TRUNCATE);
                 message += colored(std::string("Username ") + oldUsername + " has been changed to " + newUsername + ".\n", "green");
             }
-            std::cout << "Whould you like to change the password? (y/n)";
+            std::cout << "Whould you like to change the password? (y/n): ";
             std::getline(std::cin, answer);
             if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
                 std::string oldPassword = it->password;
@@ -339,7 +361,7 @@ std::string Users::updateById() {
                 strncpy_s(it->password, sizeof(it->password), newPassword, _TRUNCATE);
                 message += colored(std::string("Password ") + oldPassword + " has been changed to " + newPassword + ".\n", "green");
             }
-            std::cout << "Whould you like to change the email? (y/n)";
+            std::cout << "Whould you like to change the email? (y/n): ";
             std::getline(std::cin, answer);
             if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
                 std::string oldEmail = it->email;
@@ -368,7 +390,7 @@ std::string Users::updateByUsername() {
         if (strcmp(it->username, username) == 0) {
             std::string message = "";
             std::string answer;
-            std::cout << "Whould you like to change the username? (y/n)";
+            std::cout << "Whould you like to change the username? (y/n): ";
             std::getline(std::cin, answer);
             if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
                 std::string oldUsername = it->username;
@@ -376,7 +398,7 @@ std::string Users::updateByUsername() {
                 strncpy_s(it->username, sizeof(it->username), newUsername, _TRUNCATE);
                 message += colored(std::string("Username ") + oldUsername + " has been changed to " + newUsername + ".\n", "green");
             }
-            std::cout << "Whould you like to change the password? (y/n)";
+            std::cout << "Whould you like to change the password? (y/n): ";
             std::getline(std::cin, answer);
             if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
                 std::string oldPassword = it->password;
@@ -384,7 +406,7 @@ std::string Users::updateByUsername() {
                 strncpy_s(it->password, sizeof(it->password), newPassword, _TRUNCATE);
                 message += colored(std::string("Password ") + oldPassword + " has been changed to " + newPassword + ".\n", "green");
             }
-            std::cout << "Whould you like to change the email? (y/n)";
+            std::cout << "Whould you like to change the email? (y/n): ";
             std::getline(std::cin, answer);
             if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
                 std::string oldEmail = it->email;
@@ -413,7 +435,7 @@ std::string Users::updateByEmail() {
         if (strcmp(it->email, email) == 0) {
             std::string message = "";
             std::string answer;
-            std::cout << "Whould you like to change the username? (y/n)";
+            std::cout << "Whould you like to change the username? (y/n): ";
             std::getline(std::cin, answer);
             if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
                 std::string oldUsername = it->username;
@@ -421,7 +443,7 @@ std::string Users::updateByEmail() {
                 strncpy_s(it->username, sizeof(it->username), newUsername, _TRUNCATE);
                 message += colored(std::string("Username ") + oldUsername + " has been changed to " + newUsername + ".\n", "green");
             }
-            std::cout << "Whould you like to change the password? (y/n)";
+            std::cout << "Whould you like to change the password? (y/n): ";
             std::getline(std::cin, answer);
             if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
                 std::string oldPassword = it->password;
@@ -429,7 +451,7 @@ std::string Users::updateByEmail() {
                 strncpy_s(it->password, sizeof(it->password), newPassword, _TRUNCATE);
                 message += colored(std::string("Password ") + oldPassword + " has been changed to " + newPassword + ".\n", "green");
             }
-            std::cout << "Whould you like to change the email? (y/n)";
+            std::cout << "Whould you like to change the email? (y/n): ";
             std::getline(std::cin, answer);
             if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
                 std::string oldEmail = it->email;
@@ -451,8 +473,11 @@ std::string Users::updateByEmail() {
     return colored("User does not exist.", "red");
 }
 
-// TODO: delete all the posts
+// Delete
+//TODO: delete follows, messages
 std::string Users::deleteById() {
+    Posts posts(Users::path);
+    PostsLikes postsLikes(Users::path);
     std::cout << Users::readAllById();
     int id = Users::getId();
     for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
@@ -460,38 +485,50 @@ std::string Users::deleteById() {
             std::string username = it->username;
             Users::users.erase(it);
             Users::save();
-            return colored(std::string("User ") + username + " has been deleted.", "green");
+            return colored(std::string("User ") + username + " has been deleted.\n", "green")
+                + posts.deleteAllByAythorId(id) + '\n'
+                + postsLikes.deleteAllByUserId(id);
         }
     }
 
     return colored("User does not exist.", "red");
 }
 
-// TODO: delete all the posts
+//TODO: delete follows, messages
 std::string Users::deleteByUsername(){
+    Posts posts(Users::path);
+    PostsLikes postsLikes(Users::path);
     std::cout << Users::readAllByUsername();
     char* username = Users::getUsername();
     for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
         if (strcmp(it->username, username) == 0) {
+            int id = it->id;
             Users::users.erase(it);
             Users::save();
-            return colored(std::string("User ") + username + " has been deleted.", "green");
+            return colored(std::string("User ") + username + " has been deleted.\n", "green")
+                + posts.deleteAllByAythorId(id) + '\n'
+                + postsLikes.deleteAllByUserId(id);
         }
     }
 
     return colored("User does not exist.", "red");
 }
 
-// TODO: delete all the posts
+//TODO: delete follows, messages
 std::string Users::deleteByEmail(){
+    Posts posts(Users::path);
+    PostsLikes postsLikes(Users::path);
     std::cout << Users::readAllByEmail();
     char* email = Users::getEmail();
     for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
         if (strcmp(it->email, email) == 0) {
+            int id = it->id;
             std::string username = it->username;
             Users::users.erase(it);
             Users::save();
-            return colored(std::string("User ") + username + " has been deleted.", "green");
+            return colored(std::string("User ") + username + " has been deleted.\n", "green")
+                + posts.deleteAllByAythorId(id) + '\n'
+                + postsLikes.deleteAllByUserId(id);
         }
     }
 

@@ -10,6 +10,8 @@
 #include <cstring>
 #include "Functions.h"
 #include "fort.hpp"
+#include "Posts.h"
+#include "PostsLikes.h"
 
 struct User {
 	int id;
@@ -37,6 +39,7 @@ class Users
 		std::string deleteByUsername();
 		std::string deleteByEmail();
 		bool idExists(int id);
+		std::string getUsernameById(int id);
 	private:
 		std::vector<User> users;
 		std::string path;

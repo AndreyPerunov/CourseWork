@@ -10,6 +10,7 @@
 #include "Functions.h"
 #include "Users.h"
 #include "Posts.h"
+#include "PostsLikes.h"
 
 class SocialMedia
 {

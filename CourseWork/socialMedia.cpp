@@ -41,9 +41,9 @@ Menu* SocialMedia::buildDBMenu(std::string title) {
     readOneUser->addChild("by username");
     readOneUser->addChild("by email");
     Menu* readAllUsers = users->addChild("readAll");
-    readAllUsers->addChild("by id");
-    readAllUsers->addChild("by username");
-    readAllUsers->addChild("by email");
+    readAllUsers->addChild("sort by id");
+    readAllUsers->addChild("sort by username");
+    readAllUsers->addChild("sort by email");
     Menu* updateUser = users->addChild("update");
     updateUser->addChild("by id");
     updateUser->addChild("by username");
@@ -52,23 +52,35 @@ Menu* SocialMedia::buildDBMenu(std::string title) {
     deleteOneUser->addChild("by id");
     deleteOneUser->addChild("by username");
     deleteOneUser->addChild("by email");
-
     users->addGoBack("Go back");
 
     Menu* posts = root->addChild("Posts");
     posts->addChild("create");
-    posts->addChild("readOne");
+    posts->addChild("readOne")->addChild("by id");
     Menu* readAllPosts = posts->addChild("readAll");
-    readAllPosts->addChild("by id");
-    readAllPosts->addChild("by title");
-    readAllPosts->addChild("by body");
-    readAllPosts->addChild("by author id");
-    posts->addChild("readMany");
-    posts->addChild("update");
-    posts->addChild("delete");
+    readAllPosts->addChild("sort by id");
+    readAllPosts->addChild("sort by title");
+    readAllPosts->addChild("sort by body");
+    readAllPosts->addChild("sort by author id");
+    posts->addChild("update")->addChild("by id");
+    posts->addChild("deleteOne")->addChild("by id");
+    posts->addChild("deleteAll")->addChild("by author id");
     posts->addGoBack("Go back");
 
-    Menu* postLikes = root->addChild("Post Likes");
+    Menu* postsLikes = root->addChild("Posts Likes");
+    postsLikes->addChild("create");
+    postsLikes->addChild("readOne")->addChild("by id");
+    Menu* readAllPostsLikes = postsLikes->addChild("readAll");
+    readAllPostsLikes->addChild("sort by id");
+    readAllPostsLikes->addChild("sort by post id");
+    readAllPostsLikes->addChild("sort by user id");
+    postsLikes->addChild("update")->addChild("by id");
+    postsLikes->addChild("deleteOne")->addChild("by id");
+    Menu* deleteAllPostsLikes = postsLikes->addChild("deleteAll");
+    deleteAllPostsLikes->addChild("by user id");
+    deleteAllPostsLikes->addChild("by post id");
+    postsLikes->addGoBack("Go back");
+
     Menu* messages = root->addChild("Messages");
     Menu* follows = root->addChild("Follows");
 
@@ -81,6 +93,7 @@ void SocialMedia::editDB(std::string title) {
     try {
         Users users("./" + title + "/");
         Posts posts("./" + title + "/");
+        PostsLikes postsLikes("./" + title + "/");
 
         std::string flashMessage = "";
         while (true) {
@@ -111,16 +124,16 @@ void SocialMedia::editDB(std::string title) {
             }
 
             // READ ALL
-            // ".../Users/readAll/by id"
-            if (selectedOption == "/Users/readAll/by id") {
+            // ".../Users/readAll/sort by id"
+            if (selectedOption == "/Users/readAll/sort by id") {
                 flashMessage = users.readAllById();
             }
-            // ".../Users/readAll/by username"
-            if (selectedOption == "/Users/readAll/by username") {
+            // ".../Users/readAll/sort by username"
+            if (selectedOption == "/Users/readAll/sort by username") {
                 flashMessage = users.readAllByUsername();
             }
-            // ".../Users/readAll/by email"
-            if (selectedOption == "/Users/readAll/by email") {
+            // ".../Users/readAll/sort by email"
+            if (selectedOption == "/Users/readAll/sort by email") {
                 flashMessage = users.readAllByEmail();
             }
 
@@ -142,30 +155,125 @@ void SocialMedia::editDB(std::string title) {
             // ".../Users/delete/by id"
             if (selectedOption == "/Users/delete/by id") {
                 flashMessage = users.deleteById();
+                posts.readData();
+                postsLikes.readData();
             }
             // ".../Users/delete/by username"
             if (selectedOption == "/Users/delete/by username") {
                 flashMessage = users.deleteByUsername();
+                posts.readData();
+                postsLikes.readData();
             }
             // ".../Users/delete/by email"
             if (selectedOption == "/Users/delete/by email") {
                 flashMessage = users.deleteByEmail();
+                posts.readData();
+                postsLikes.readData();
             }
 
             ///////////////////////
             // POSTS
             ///////////////////////
+            // CREATE
             // ".../Posts/create"
             if (selectedOption == "/Posts/create") {
                 flashMessage = posts.create();
             }
 
-            // ".../Posts/readAll/by id"
-            if (selectedOption == "/Posts/readAll/by id") {
-                flashMessage = posts.readAllById();
+            // READ ONE
+            // ".../Posts/readOne/by id"
+            if (selectedOption == "/Posts/readOne/by id") {
+                flashMessage = posts.readOneById();
             }
 
+            // READ ALL
+            // ".../Posts/readAll/sort by id"
+            if (selectedOption == "/Posts/readAll/sort by id") {
+                flashMessage = posts.readAllById();
+            }
+            // ".../Posts/readAll/sort by title"
+            if (selectedOption == "/Posts/readAll/sort by title") {
+                flashMessage = posts.readAllByTitle();
+            }
+            // ".../Posts/readAll/sort by body"
+            if (selectedOption == "/Posts/readAll/sort by body") {
+                flashMessage = posts.readAllByBody();
+            }
+            // ".../Posts/readAll/sort by author id"
+            if (selectedOption == "/Posts/readAll/sort by author id") {
+                flashMessage = posts.readAllByAuthorId();
+            }
 
+            // UPDATE
+            // ".../Posts/update/by id"
+            if (selectedOption == "/Posts/update/by id") {
+                flashMessage = posts.updateById();
+            }
+
+            // DELETE ONE
+            // ".../Posts/deleteOne/by id"
+            if (selectedOption == "/Posts/deleteOne/by id") {
+                flashMessage = posts.deleteOneById();
+                postsLikes.readData();
+            }
+
+            // DELETE ALL
+            // ".../Posts/deleteAll/by author id"
+            if (selectedOption == "/Posts/deleteAll/by author id") {
+                flashMessage = posts.deleteAllByAythorId();
+                postsLikes.readData();
+            }
+
+            ///////////////////////
+            // POSTS LIKES
+            ///////////////////////
+            // CREATE
+            // ".../Posts Likes/create"
+            if (selectedOption == "/Posts Likes/create") {
+                flashMessage = postsLikes.create(); 
+            }
+
+            // READ ONE
+            // ".../Posts Likes/readOne/by id"
+            if (selectedOption == "/Posts Likes/readOne/by id") {
+                flashMessage = postsLikes.readOneById();
+            }
+
+            // READ ALL
+            // ".../Posts Likes/readAll/sort by id"
+            if (selectedOption == "/Posts Likes/readAll/sort by id") {
+                flashMessage = postsLikes.readAllById();
+            }
+            // ".../Posts Likes/readAll/sort by post id"
+            if (selectedOption == "/Posts Likes/readAll/sort by post id") {
+                flashMessage = postsLikes.readAllByPostId();
+            }
+            // ".../Posts Likes/readAll/sort by user id"
+            if (selectedOption == "/Posts Likes/readAll/sort by user id") {
+                flashMessage = postsLikes.readAllByUserId();
+            }
+
+            // UPDATE
+            // ".../Posts Likes/update/by id"
+            if (selectedOption == "/Posts Likes/update/by id") {
+                flashMessage = postsLikes.updateById();
+            }
+
+            // DELETE ONE
+            // ".../Posts Likes/deleteOne/by id"
+            if (selectedOption == "/Posts Likes/deleteOne/by id") {
+                flashMessage = postsLikes.deleteOneById();
+            }
+
+            // DELETE ALL
+            // ".../Posts Likes/deleteAll/by post id"
+            if (selectedOption == "/Posts Likes/deleteAll/by post id") {
+                flashMessage = postsLikes.deleteAllByPostId();
+            }
+            // ".../Posts Likes/deleteAll/by user id"
+            if (selectedOption == "/Posts Likes/deleteAll/by user id") {
+                flashMessage = postsLikes.deleteAllByUserId();
+            }
 
             // ".../Home"
             if (selectedOption == "/Home") break;

@@ -134,15 +134,17 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Posts.cpp" />
+    <ClCompile Include="PostsLikes.cpp" />
     <ClCompile Include="SocialMedia.cpp" />
     <ClCompile Include="Users.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Documents\CPPLibraries\libfort-0.4.2\src\fort.hpp" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="fort.h" />
-    <ClInclude Include="fort.hpp" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Posts.h" />
+    <ClInclude Include="PostsLikes.h" />
     <ClInclude Include="SocialMedia.h" />
     <ClInclude Include="Users.h" />
   </ItemGroup>
