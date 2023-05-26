@@ -56,7 +56,7 @@ std::string Posts::save() {
 
 char* Posts::getTitle() {
 	std::string title;
-	std::regex pattern("[a-zA-Z0-9!\\(\\)\\-\\.\\?\\[\\]_`~;:!@#$%^&*+= '\\']+");
+	std::regex pattern("[a-zA-Z0-9!\\(\\)\\-\\.\\?\\[\\]_`~;:!@#$%^&*+= '\\',\"{}|><']+");
 
 	while (true) {
 		std::cout << "Enter " << colored("title", "blue") << ": ";
@@ -78,7 +78,7 @@ char* Posts::getTitle() {
 
 char* Posts::getBody() {
 	std::string title;
-	std::regex pattern("[a-zA-Z0-9!\\(\\)\\-\\.\\?\\[\\]_`~;:!@#$%^&*+= '\\']+");
+	std::regex pattern("[a-zA-Z0-9!\\(\\)\\-\\.\\?\\[\\]_`~;:!@#$%^&*+= '\\',\"{}|><']+");
 
 	while (true) {
 		std::cout << "Enter " << colored("body", "blue") << ": ";
@@ -401,7 +401,7 @@ std::string Posts::deleteAllByAythorId(int authorId) {
 	}
 
 	if (message == "") {
-		return colored("This user has no posts", "red");
+		return colored("This user has no posts.\n", "red");
 	}
 	Posts::save();
 	return message;

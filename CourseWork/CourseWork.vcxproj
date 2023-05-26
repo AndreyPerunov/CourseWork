@@ -129,10 +129,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Follows.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="fort.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="Messages.cpp" />
     <ClCompile Include="Posts.cpp" />
     <ClCompile Include="PostsLikes.cpp" />
     <ClCompile Include="SocialMedia.cpp" />
@@ -140,9 +142,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Documents\CPPLibraries\libfort-0.4.2\src\fort.hpp" />
+    <ClInclude Include="Follows.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="fort.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="Messages.h" />
     <ClInclude Include="Posts.h" />
     <ClInclude Include="PostsLikes.h" />
     <ClInclude Include="SocialMedia.h" />

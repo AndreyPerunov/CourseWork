@@ -81,8 +81,34 @@ Menu* SocialMedia::buildDBMenu(std::string title) {
     deleteAllPostsLikes->addChild("by post id");
     postsLikes->addGoBack("Go back");
 
-    Menu* messages = root->addChild("Messages");
     Menu* follows = root->addChild("Follows");
+    follows->addChild("create");
+    follows->addChild("readOne")->addChild("by id");
+    Menu* readAllFollows = follows->addChild("readAll");
+    readAllFollows->addChild("sort by id");
+    readAllFollows->addChild("sort by follower id");
+    readAllFollows->addChild("sort by following id");
+    follows->addChild("update")->addChild("by id");
+    follows->addChild("deleteOne")->addChild("by id");
+    Menu* deleteAllFollows= follows->addChild("deleteAll");
+    deleteAllFollows->addChild("by follower id");
+    deleteAllFollows->addChild("by following id");
+    follows->addGoBack("Go back");
+
+    Menu* messages = root->addChild("Messages");
+    messages->addChild("create");
+    messages->addChild("readOne")->addChild("by id");
+    Menu* readAllMessages = messages->addChild("readAll");
+    readAllMessages->addChild("sort by id");
+    readAllMessages->addChild("sort by from id");
+    readAllMessages->addChild("sort by to id");
+    readAllMessages->addChild("sort by message");
+    messages->addChild("update")->addChild("by id");
+    messages->addChild("deleteOne")->addChild("by id");
+    Menu* deleteAllMessages = messages->addChild("deleteAll");
+    deleteAllMessages->addChild("by from id");
+    deleteAllMessages->addChild("by to id");
+    messages->addGoBack("Go back");
 
      root->addChild("Home");
 
@@ -94,6 +120,8 @@ void SocialMedia::editDB(std::string title) {
         Users users("./" + title + "/");
         Posts posts("./" + title + "/");
         PostsLikes postsLikes("./" + title + "/");
+        Follows follows("./" + title + "/");
+        Messages messages("./" + title + "/");
 
         std::string flashMessage = "";
         while (true) {
@@ -104,121 +132,103 @@ void SocialMedia::editDB(std::string title) {
             ///////////////////////
             // USERS
             ///////////////////////
-            // ".../Users/create"
+            // CREATE
             if (selectedOption == "/Users/create") {
                 flashMessage = users.create();
             }
             
             // READ ONE
-            // ".../Users/readOne/by id"
             if (selectedOption == "/Users/readOne/by id") {
                 flashMessage = users.readOneById();
             }
-            // ".../Users/readOne/by username"
             if (selectedOption == "/Users/readOne/by username") {
                 flashMessage = users.readOneByUsername();
             }
-            // ".../Users/readOne/by email"
             if (selectedOption == "/Users/readOne/by email") {
                 flashMessage = users.readOneByEmail();
             }
 
             // READ ALL
-            // ".../Users/readAll/sort by id"
             if (selectedOption == "/Users/readAll/sort by id") {
                 flashMessage = users.readAllById();
             }
-            // ".../Users/readAll/sort by username"
             if (selectedOption == "/Users/readAll/sort by username") {
                 flashMessage = users.readAllByUsername();
             }
-            // ".../Users/readAll/sort by email"
             if (selectedOption == "/Users/readAll/sort by email") {
                 flashMessage = users.readAllByEmail();
             }
 
             // UPDATE
-            // ".../Users/update/by id"
             if (selectedOption == "/Users/update/by id") {
                 flashMessage = users.updateById();
             }
-            // ".../Users/update/by username"
             if (selectedOption == "/Users/update/by username") {
                 flashMessage = users.updateByUsername();
             }
-            // ".../Users/update/by email"
             if (selectedOption == "/Users/update/by email") {
                 flashMessage = users.updateByEmail();
             }
 
             // DELETE
-            // ".../Users/delete/by id"
             if (selectedOption == "/Users/delete/by id") {
                 flashMessage = users.deleteById();
                 posts.readData();
                 postsLikes.readData();
+                follows.readData();
             }
-            // ".../Users/delete/by username"
             if (selectedOption == "/Users/delete/by username") {
                 flashMessage = users.deleteByUsername();
                 posts.readData();
                 postsLikes.readData();
+                follows.readData();
             }
-            // ".../Users/delete/by email"
             if (selectedOption == "/Users/delete/by email") {
                 flashMessage = users.deleteByEmail();
                 posts.readData();
                 postsLikes.readData();
+                follows.readData();
             }
 
             ///////////////////////
             // POSTS
             ///////////////////////
             // CREATE
-            // ".../Posts/create"
             if (selectedOption == "/Posts/create") {
                 flashMessage = posts.create();
             }
 
             // READ ONE
-            // ".../Posts/readOne/by id"
             if (selectedOption == "/Posts/readOne/by id") {
                 flashMessage = posts.readOneById();
             }
 
             // READ ALL
-            // ".../Posts/readAll/sort by id"
             if (selectedOption == "/Posts/readAll/sort by id") {
                 flashMessage = posts.readAllById();
             }
-            // ".../Posts/readAll/sort by title"
             if (selectedOption == "/Posts/readAll/sort by title") {
                 flashMessage = posts.readAllByTitle();
             }
-            // ".../Posts/readAll/sort by body"
             if (selectedOption == "/Posts/readAll/sort by body") {
                 flashMessage = posts.readAllByBody();
             }
-            // ".../Posts/readAll/sort by author id"
             if (selectedOption == "/Posts/readAll/sort by author id") {
                 flashMessage = posts.readAllByAuthorId();
             }
 
             // UPDATE
-            // ".../Posts/update/by id"
             if (selectedOption == "/Posts/update/by id") {
                 flashMessage = posts.updateById();
             }
 
             // DELETE ONE
-            // ".../Posts/deleteOne/by id"
             if (selectedOption == "/Posts/deleteOne/by id") {
                 flashMessage = posts.deleteOneById();
                 postsLikes.readData();
             }
 
             // DELETE ALL
-            // ".../Posts/deleteAll/by author id"
             if (selectedOption == "/Posts/deleteAll/by author id") {
                 flashMessage = posts.deleteAllByAythorId();
                 postsLikes.readData();
@@ -228,52 +238,99 @@ void SocialMedia::editDB(std::string title) {
             // POSTS LIKES
             ///////////////////////
             // CREATE
-            // ".../Posts Likes/create"
             if (selectedOption == "/Posts Likes/create") {
                 flashMessage = postsLikes.create(); 
             }
 
             // READ ONE
-            // ".../Posts Likes/readOne/by id"
             if (selectedOption == "/Posts Likes/readOne/by id") {
                 flashMessage = postsLikes.readOneById();
             }
 
             // READ ALL
-            // ".../Posts Likes/readAll/sort by id"
             if (selectedOption == "/Posts Likes/readAll/sort by id") {
                 flashMessage = postsLikes.readAllById();
             }
-            // ".../Posts Likes/readAll/sort by post id"
             if (selectedOption == "/Posts Likes/readAll/sort by post id") {
                 flashMessage = postsLikes.readAllByPostId();
             }
-            // ".../Posts Likes/readAll/sort by user id"
             if (selectedOption == "/Posts Likes/readAll/sort by user id") {
                 flashMessage = postsLikes.readAllByUserId();
             }
 
             // UPDATE
-            // ".../Posts Likes/update/by id"
             if (selectedOption == "/Posts Likes/update/by id") {
                 flashMessage = postsLikes.updateById();
             }
 
             // DELETE ONE
-            // ".../Posts Likes/deleteOne/by id"
             if (selectedOption == "/Posts Likes/deleteOne/by id") {
                 flashMessage = postsLikes.deleteOneById();
             }
 
             // DELETE ALL
-            // ".../Posts Likes/deleteAll/by post id"
             if (selectedOption == "/Posts Likes/deleteAll/by post id") {
                 flashMessage = postsLikes.deleteAllByPostId();
             }
-            // ".../Posts Likes/deleteAll/by user id"
             if (selectedOption == "/Posts Likes/deleteAll/by user id") {
                 flashMessage = postsLikes.deleteAllByUserId();
             }
+
+            ///////////////////////
+            // FOLLOWS
+            ///////////////////////
+            // CREATE
+            if (selectedOption == "/Follows/create") {
+                flashMessage = follows.create();
+            }
+
+            // READ ONE
+            if (selectedOption == "/Follows/readOne/by id") {
+                flashMessage = follows.readOneById();
+            }
+
+            // READ ALL
+            if (selectedOption == "/Follows/readAll/sort by id") {
+                flashMessage = follows.readAllById();
+            }
+            if (selectedOption == "/Follows/readAll/sort by follower id") {
+                flashMessage = follows.readAllByFollowerId();
+            }
+            if (selectedOption == "/Follows/readAll/sort by following id") {
+                flashMessage = follows.readAllByFollowingId();
+            }
+
+            // UPDATE
+            if (selectedOption == "/Follows/update/by id") {
+                flashMessage = follows.updateById();
+            }
+
+            // DELETE ONE
+            if (selectedOption == "/Follows/deleteOne/by id") {
+                flashMessage = follows.deleteOneById();
+            }
+
+            // DELETE ALL
+            if (selectedOption == "/Follows/deleteAll/by follower id") {
+                flashMessage = follows.deleteAllByFollowerId();
+            }
+            if (selectedOption == "/Follows/deleteAll/by following id") {
+                flashMessage = follows.deleteAllByFollowingId();
+            }
+
+            ///////////////////////
+            // MESSAGES
+            ///////////////////////
+            // CREATE
+            if (selectedOption == "/Messages/create") {
+                flashMessage = messages.create();
+            }
+
+            // READ ONE
+            if (selectedOption == "/Messages/readOne/by id") {
+                flashMessage = messages.readOneById();
+            }
+
 
             // ".../Home"
             if (selectedOption == "/Home") break;

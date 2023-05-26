@@ -109,7 +109,7 @@ char* Users::getUsername() {
 
 char* Users::getPassword() {
     std::string password;
-    std::regex pattern("[a-zA-Z0-9!\\(\\)\\-\\.\\?\\[\\]_`~;:!@#$%^&*+=]+");
+    std::regex pattern("[a-zA-Z0-9!\\(\\)\\-\\.\\?\\[\\]_`~;:!@#$%^&*+= '\\',\"{}|><']+");
 
     while (true) {
         std::cout << "Enter " << colored("password", "blue") << ": ";
@@ -209,17 +209,18 @@ std::string Users::create() {
 }
 
 // Read One
-//TODO: followers count; following count
 std::string Users::readOneById() {
     Posts posts(Users::path);
+    Follows follows(Users::path);
+
     int id = Users::getId();
     for (User user : Users::users) {
         if (user.id == id) {
             fort::char_table table;
 
             table << fort::header
-                << "ID" << "Username" << "Password" << "Email" << "Posts" << fort::endr
-                << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << fort::endr;
+                << "ID" << "Username" << "Password" << "Email" << "Posts" << "Followers" << "Following" << fort::endr
+                << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr;
 
             return table.to_string();
         }
@@ -228,17 +229,18 @@ std::string Users::readOneById() {
     return colored("User does not exist.", "red");
 }
 
-//TODO: followers count; following count
 std::string Users::readOneByUsername() {
     Posts posts(Users::path);
+    Follows follows(Users::path);
+
     std::string username = Users::getUsername();
     for (User user : Users::users) {
         if (user.username == username) {
             fort::char_table table;
 
             table << fort::header
-                << "ID" << "Username" << "Password" << "Email" << "Posts" << fort::endr
-                << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << fort::endr;
+                << "ID" << "Username" << "Password" << "Email" << "Posts" << "Followers" << "Following" << fort::endr
+                << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr;
 
             return table.to_string();
         }
@@ -247,17 +249,18 @@ std::string Users::readOneByUsername() {
     return colored("User does not exist.", "red");
 }
 
-//TODO: followers count; following count
 std::string Users::readOneByEmail() {
     Posts posts(Users::path);
+    Follows follows(Users::path);
+
     std::string email = Users::getEmail();
     for (User user : Users::users) {
         if (user.email == email) {
             fort::char_table table;
 
             table << fort::header
-                << "ID" << "Username" << "Password" << "Email" << "Posts" << fort::endr
-                << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << fort::endr;
+                << "ID" << "Username" << "Password" << "Email" << "Posts" << "Followers" << "Following" << fort::endr
+                << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr;
 
             return table.to_string();
         }
@@ -267,27 +270,27 @@ std::string Users::readOneByEmail() {
 }
 
 // Read All
-//TODO: followers count; following count
 std::string Users::readAllById(){
     Posts posts(Users::path);
+    Follows follows(Users::path);
 
     fort::char_table table;
 
     // Set Header
     table << fort::header
-        << "ID" << "Username" << "Password" << "Email" << "Posts" << fort::endr;
+        << "ID" << "Username" << "Password" << "Email" << "Posts" << "Followers" << "Following" << fort::endr;
 
     // Set Content
     for (User user : Users::users) {
-        table << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << fort::endr;
+        table << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr;
     }
 
     return table.to_string();
 }
 
-//TODO: followers count; following count
 std::string Users::readAllByUsername() {
     Posts posts(Users::path);
+    Follows follows(Users::path);
 
     std::vector<User> copyUsers = Users::users;
 
@@ -301,19 +304,19 @@ std::string Users::readAllByUsername() {
 
     // Set Header
     table << fort::header
-        << "ID" << "Username" << "Password" << "Email" << "Posts" << fort::endr;
+        << "ID" << "Username" << "Password" << "Email" << "Posts" << "Followers" << "Following" << fort::endr;
 
     // Set Content
     for (User user : copyUsers) {
-        table << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << fort::endr;
+        table << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr;
     }
 
     return table.to_string();
 }
 
-//TODO: followers count; following count
 std::string Users::readAllByEmail() {
     Posts posts(Users::path);
+    Follows follows(Users::path);
 
     std::vector<User> copyUsers = Users::users;
 
@@ -327,11 +330,11 @@ std::string Users::readAllByEmail() {
 
     // Set Header
     table << fort::header
-        << "ID" << "Username" << "Password" << "Email" << "Posts" << fort::endr;
+        << "ID" << "Username" << "Password" << "Email" << "Posts" << "Followers" << "Following" << fort::endr;
 
     // Set Content
     for (User user : copyUsers) {
-        table << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << fort::endr;
+        table << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr;
     }
 
     return table.to_string();
@@ -474,10 +477,12 @@ std::string Users::updateByEmail() {
 }
 
 // Delete
-//TODO: delete follows, messages
+//TODO: messages
 std::string Users::deleteById() {
     Posts posts(Users::path);
     PostsLikes postsLikes(Users::path);
+    Follows follows(Users::path);
+
     std::cout << Users::readAllById();
     int id = Users::getId();
     for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
@@ -486,18 +491,22 @@ std::string Users::deleteById() {
             Users::users.erase(it);
             Users::save();
             return colored(std::string("User ") + username + " has been deleted.\n", "green")
-                + posts.deleteAllByAythorId(id) + '\n'
-                + postsLikes.deleteAllByUserId(id);
+                + posts.deleteAllByAythorId(id)
+                + postsLikes.deleteAllByUserId(id)
+                + follows.deleteAllByFollowerId(id)
+                + follows.deleteAllByFollowingId(id);
         }
     }
 
     return colored("User does not exist.", "red");
 }
 
-//TODO: delete follows, messages
+//TODO: messages
 std::string Users::deleteByUsername(){
     Posts posts(Users::path);
     PostsLikes postsLikes(Users::path);
+    Follows follows(Users::path);
+
     std::cout << Users::readAllByUsername();
     char* username = Users::getUsername();
     for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
@@ -506,18 +515,22 @@ std::string Users::deleteByUsername(){
             Users::users.erase(it);
             Users::save();
             return colored(std::string("User ") + username + " has been deleted.\n", "green")
-                + posts.deleteAllByAythorId(id) + '\n'
-                + postsLikes.deleteAllByUserId(id);
+                + posts.deleteAllByAythorId(id)
+                + postsLikes.deleteAllByUserId(id)
+                + follows.deleteAllByFollowerId(id)
+                + follows.deleteAllByFollowingId(id);
         }
     }
 
     return colored("User does not exist.", "red");
 }
 
-//TODO: delete follows, messages
+//TODO: messages
 std::string Users::deleteByEmail(){
     Posts posts(Users::path);
     PostsLikes postsLikes(Users::path);
+    Follows follows(Users::path);
+
     std::cout << Users::readAllByEmail();
     char* email = Users::getEmail();
     for (auto it = Users::users.begin(); it != Users::users.end(); ++it) {
@@ -527,8 +540,10 @@ std::string Users::deleteByEmail(){
             Users::users.erase(it);
             Users::save();
             return colored(std::string("User ") + username + " has been deleted.\n", "green")
-                + posts.deleteAllByAythorId(id) + '\n'
-                + postsLikes.deleteAllByUserId(id);
+                + posts.deleteAllByAythorId(id)
+                + postsLikes.deleteAllByUserId(id)
+                + follows.deleteAllByFollowerId(id)
+                + follows.deleteAllByFollowingId(id);
         }
     }
 

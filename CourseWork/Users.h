@@ -12,6 +12,7 @@
 #include "fort.hpp"
 #include "Posts.h"
 #include "PostsLikes.h"
+#include "Follows.h"
 
 struct User {
 	int id;
@@ -20,8 +21,7 @@ struct User {
 	char email[31];
 };
 
-class Users
-{
+class Users {
 	public:
 		Users(std::string path);
 		std::string create();

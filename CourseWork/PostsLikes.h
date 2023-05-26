@@ -18,8 +18,7 @@ struct PostLike {
 	int userId;
 };
 
-class PostsLikes
-{
+class PostsLikes {
 	public:
 		PostsLikes(std::string path);
 		void readData();

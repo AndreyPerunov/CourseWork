@@ -249,20 +249,21 @@ std::string PostsLikes::updateById() {
 		if (it->id == id) {
 			std::string message = "";
 			std::string answer;
+			int newPostId = it->postId;
+			int newUserId = it->userId;
+
 			std::cout << "Whould you like to change the post id? (y/n): ";
 			std::getline(std::cin, answer);
 			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
 				int oldPostId = it->postId;
-				int newPostId = getPostId();
-				it->postId = newPostId;
+				newPostId = getPostId();
 				message += colored("Post id " + std::to_string(oldPostId) + " has been changed to " + std::to_string(newPostId) + ".\n", "green");
 			}
 			std::cout << "Whould you like to change the user id? (y/n): ";
 			std::getline(std::cin, answer);
 			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
 				int oldUserId = it->userId;
-				int newUserId = getUserId();
-				it->userId = newUserId;
+				newUserId = getUserId();
 				message += colored("User id " + std::to_string(oldUserId) + " has been changed to " + std::to_string(newUserId) + ".\n", "green");
 			}
 
@@ -270,6 +271,12 @@ std::string PostsLikes::updateById() {
 				return colored("Nothing was changed.", "green");
 			}
 			else {
+				if (PostsLikes::liked(newPostId, newUserId)) {
+					return colored("This user already liked this post.", "red");
+				}
+
+				it->postId = newPostId;
+				it->userId = newUserId;
 				PostsLikes::save();
 				return message;
 			}
@@ -337,7 +344,7 @@ std::string PostsLikes::deleteAllByPostId(int postId) {
 	}
 
 	if (message == "") {
-		return colored("This post has no likes", "red");
+		return colored("This post has no likes.\n", "red");
 	}
 
 	PostsLikes::save();
@@ -387,7 +394,7 @@ std::string PostsLikes::deleteAllByUserId(int userId) {
 	}
 
 	if (message == "") {
-		return colored("This user hasn't liked anyone.", "red");
+		return colored("This user hasn't liked anyone.\n", "red");
 	}
 
 	PostsLikes::save();

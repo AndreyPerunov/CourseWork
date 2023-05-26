@@ -19,8 +19,7 @@ struct Post {
 	int authorId;
 };
 
-class Posts
-{
+class Posts {
 	public:
 		Posts(std::string path);
 		void readData();
