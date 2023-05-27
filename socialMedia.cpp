@@ -10,7 +10,7 @@ Menu* SocialMedia::buildMenu() {
     // SELECT
     Menu* selectDB = root->addChild("Select DB");
     for (auto entry : fs::directory_iterator("./")) {
-        if (fs::is_directory(entry.status()) && entry.path() != "./x64") {
+        if (fs::is_directory(entry.status()) && entry.path() != "./.git") {
             selectDB->addChild(entry.path().filename().string());
         }
     }

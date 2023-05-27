@@ -3,6 +3,7 @@
 #define _FUNCTIONS_H_
 
 #include <string>
+#include <cstring>
 
 std::string colored(std::string text, std::string color);
 char* stoc(std::string string);
