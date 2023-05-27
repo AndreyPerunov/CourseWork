@@ -10,7 +10,7 @@ Menu* SocialMedia::buildMenu() {
     // SELECT
     Menu* selectDB = root->addChild("Select DB");
     for (auto entry : fs::directory_iterator("./")) {
-        if (fs::is_directory(entry.status()) && entry.path() != "./.git") {
+        if (fs::is_directory(entry.status()) && entry.path() != "./x64" && entry.path() != "./.git") {
             selectDB->addChild(entry.path().filename().string());
         }
     }
@@ -19,7 +19,7 @@ Menu* SocialMedia::buildMenu() {
     // DELETE
     Menu* deleteDB = root->addChild("Delete DB");
     for (auto entry : fs::directory_iterator("./")) {
-        if (fs::is_directory(entry.status()) && entry.path() != "./x64") {
+        if (fs::is_directory(entry.status()) && entry.path() != "./x64" && entry.path() != "./.git") {
             deleteDB->addChild(entry.path().filename().string());
         }
     }
