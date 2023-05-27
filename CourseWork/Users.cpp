@@ -348,7 +348,7 @@ std::string Users::updateById() {
         if (it->id == id) {
             std::string message = "";
             std::string answer;
-            std::cout << "Whould you like to change the username? (y/n): ";
+            std::cout << "Whould you like to change the username? (y - to change): ";
             std::getline(std::cin, answer);
             if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
                 std::string oldUsername = it->username;
@@ -356,7 +356,7 @@ std::string Users::updateById() {
                 strncpy_s(it->username, sizeof(it->username), newUsername, _TRUNCATE);
                 message += colored(std::string("Username ") + oldUsername + " has been changed to " + newUsername + ".\n", "green");
             }
-            std::cout << "Whould you like to change the password? (y/n): ";
+            std::cout << "Whould you like to change the password? (y - to change): ";
             std::getline(std::cin, answer);
             if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
                 std::string oldPassword = it->password;
@@ -364,7 +364,7 @@ std::string Users::updateById() {
                 strncpy_s(it->password, sizeof(it->password), newPassword, _TRUNCATE);
                 message += colored(std::string("Password ") + oldPassword + " has been changed to " + newPassword + ".\n", "green");
             }
-            std::cout << "Whould you like to change the email? (y/n): ";
+            std::cout << "Whould you like to change the email? (y - to change): ";
             std::getline(std::cin, answer);
             if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
                 std::string oldEmail = it->email;
@@ -477,11 +477,11 @@ std::string Users::updateByEmail() {
 }
 
 // Delete
-//TODO: messages
 std::string Users::deleteById() {
     Posts posts(Users::path);
     PostsLikes postsLikes(Users::path);
     Follows follows(Users::path);
+    Messages messages(Users::path);
 
     std::cout << Users::readAllById();
     int id = Users::getId();
@@ -494,18 +494,20 @@ std::string Users::deleteById() {
                 + posts.deleteAllByAythorId(id)
                 + postsLikes.deleteAllByUserId(id)
                 + follows.deleteAllByFollowerId(id)
-                + follows.deleteAllByFollowingId(id);
+                + follows.deleteAllByFollowingId(id)
+                + messages.deleteAllByFromId(id)
+                + messages.deleteAllByToId(id);
         }
     }
 
     return colored("User does not exist.", "red");
 }
 
-//TODO: messages
 std::string Users::deleteByUsername(){
     Posts posts(Users::path);
     PostsLikes postsLikes(Users::path);
     Follows follows(Users::path);
+    Messages messages(Users::path);
 
     std::cout << Users::readAllByUsername();
     char* username = Users::getUsername();
@@ -518,18 +520,20 @@ std::string Users::deleteByUsername(){
                 + posts.deleteAllByAythorId(id)
                 + postsLikes.deleteAllByUserId(id)
                 + follows.deleteAllByFollowerId(id)
-                + follows.deleteAllByFollowingId(id);
+                + follows.deleteAllByFollowingId(id)
+                + messages.deleteAllByFromId(id)
+                + messages.deleteAllByToId(id);
         }
     }
 
     return colored("User does not exist.", "red");
 }
 
-//TODO: messages
 std::string Users::deleteByEmail(){
     Posts posts(Users::path);
     PostsLikes postsLikes(Users::path);
     Follows follows(Users::path);
+    Messages messages(Users::path);
 
     std::cout << Users::readAllByEmail();
     char* email = Users::getEmail();
@@ -543,7 +547,9 @@ std::string Users::deleteByEmail(){
                 + posts.deleteAllByAythorId(id)
                 + postsLikes.deleteAllByUserId(id)
                 + follows.deleteAllByFollowerId(id)
-                + follows.deleteAllByFollowingId(id);
+                + follows.deleteAllByFollowingId(id)
+                + messages.deleteAllByFromId(id)
+                + messages.deleteAllByToId(id);
         }
     }
 

@@ -13,6 +13,7 @@
 #include "Posts.h"
 #include "PostsLikes.h"
 #include "Follows.h"
+#include "Messages.h"
 
 struct User {
 	int id;

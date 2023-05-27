@@ -151,3 +151,250 @@ std::string Messages::readOneById() {
 
 	return colored("Message does not exist.", "red");
 }
+
+// Read All
+std::string Messages::readAllById() {
+	Users users(Messages::path);
+
+	fort::char_table table;
+
+	// Set Header
+	table << fort::header
+		  << "ID" << "From ID" << "From" << "To ID" << "To" << "Message" << fort::endr;
+
+	// Set Content
+	for (Message message : Messages::messages) {
+		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << message.message << fort::endr;
+	}
+
+	return table.to_string();
+}
+
+std::string Messages::readAllByFromId() {
+	Users users(Messages::path);
+
+	std::vector<Message> copyMessages = Messages::messages;
+
+	// Sort
+	std::sort(copyMessages.begin(), copyMessages.end(), [](Message a, Message b) {
+		return a.fromId < b.fromId;
+	});
+
+	// Create a table
+	fort::char_table table;
+
+	// Set Header
+	table << fort::header
+		<< "ID" << "From ID" << "From" << "To ID" << "To" << "Message" << fort::endr;
+
+	// Set Content
+	for (Message message: copyMessages) {
+		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << message.message << fort::endr;
+	}
+
+	return table.to_string();
+}
+
+std::string Messages::readAllByToId() {
+	Users users(Messages::path);
+
+	std::vector<Message> copyMessages = Messages::messages;
+
+	// Sort
+	std::sort(copyMessages.begin(), copyMessages.end(), [](Message a, Message b) {
+		return a.toId < b.toId;
+		});
+
+	// Create a table
+	fort::char_table table;
+
+	// Set Header
+	table << fort::header
+		<< "ID" << "From ID" << "From" << "To ID" << "To" << "Message" << fort::endr;
+
+	// Set Content
+	for (Message message : copyMessages) {
+		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << message.message << fort::endr;
+	}
+
+	return table.to_string();
+}
+
+std::string Messages::readAllByMessages() {
+	Users users(Messages::path);
+
+	std::vector<Message> copyMessages = Messages::messages;
+
+	// Sort
+	std::sort(copyMessages.begin(), copyMessages.end(), [](Message a, Message b) {
+		return strcmp(a.message, b.message) < 0;
+		});
+
+	// Create a table
+	fort::char_table table;
+
+	// Set Header
+	table << fort::header
+		<< "ID" << "From ID" << "From" << "To ID" << "To" << "Message" << fort::endr;
+
+	// Set Content
+	for (Message message : copyMessages) {
+		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << message.message << fort::endr;
+	}
+
+	return table.to_string();
+}
+
+// Update
+std::string Messages::updateById() {
+	std::cout << Messages::readAllById();
+	int id = Messages::getId();
+	for (auto it = Messages::messages.begin(); it != Messages::messages.end(); ++it) {
+		if (it->id == id) {
+			std::string message = "";
+			std::string answer;
+			std::cout << "Whould you like to change the from id? (y - to change): ";
+			std::getline(std::cin, answer);
+			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
+				int oldFromId = it->fromId;
+				int newFromId = Messages::getUserId("from id");
+				it->fromId = newFromId;
+				message += colored("From id " + std::to_string(oldFromId) + " has been changed to " + std::to_string(newFromId) + ".\n", "green");
+			}
+			std::cout << "Whould you like to change the to id? (y/n): ";
+			std::getline(std::cin, answer);
+			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
+				int oldToID = it->toId;
+				int newToId = Messages::getUserId("to id");
+				it->toId = newToId;
+				message += colored("To id " + std::to_string(oldToID) + " has been changed to " + std::to_string(newToId) + ".\n", "green");
+			}
+			std::cout << "Whould you like to change the message? (y/n): ";
+			std::getline(std::cin, answer);
+			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
+				std::string oldMessage = it->message;
+				char* newMessage = Messages::getMessage();
+				strncpy_s(it->message, sizeof(it->message), newMessage, _TRUNCATE);
+				message += colored("Message " + oldMessage + " has been changed to " + newMessage + ".\n", "green");
+			}
+
+			if (message == "") {
+				return colored("Nothing was changed.", "green");
+			}
+			else {
+				Messages::save();
+				return message;
+			}
+		}
+	}
+
+	return colored("Message does not exist.", "red");
+}
+
+// Delete One
+std::string Messages::deleteOneById() {
+	std::cout << Messages::readAllById();
+	int id = Messages::getId();
+	for (auto it = Messages::messages.begin(); it != Messages::messages.end(); ++it) {
+		if (it->id == id) {
+			Messages::messages.erase(it);
+			Messages::save();
+			return colored("Message with id " + std::to_string(id) + " has been deleted.", "green");
+		}
+	}
+
+	return colored("Message does not exist.", "red");
+}
+
+// Delete All
+std::string Messages::deleteAllByFromId() {
+	std::cout << Messages::readAllByFromId();
+	int fromId = Messages::getUserId("from id");
+	std::string message = "";
+	std::vector<Message>::iterator it = Messages::messages.begin();
+	while (it != Messages::messages.end()) {
+		if (it->fromId == fromId) {
+			std::string deletedMessage = it->message;
+			int id = it->id;
+			it = Messages::messages.erase(it);
+			message += colored("Message '" + deletedMessage + "' has been deleted.\n", "green");
+		}
+		else {
+			++it;
+		}
+	}
+
+	if (message == "") {
+		return colored("This user has no messages.\n", "red");
+	}
+	Messages::save();
+	return message;
+}
+
+std::string Messages::deleteAllByFromId(int userId) {
+	std::string message = "";
+	std::vector<Message>::iterator it = Messages::messages.begin();
+	while (it != Messages::messages.end()) {
+		if (it->fromId == userId) {
+			std::string deletedMessage = it->message;
+			int id = it->id;
+			it = Messages::messages.erase(it);
+			message += colored("Message '" + deletedMessage + "' has been deleted.\n", "green");
+		}
+		else {
+			++it;
+		}
+	}
+
+	if (message == "") {
+		return colored("This user has no messages.\n", "red");
+	}
+	Messages::save();
+	return message;
+}
+
+std::string Messages::deleteAllByToId() {
+	std::cout << Messages::readAllByToId();
+	int toId = Messages::getUserId("to id");
+	std::string message = "";
+	std::vector<Message>::iterator it = Messages::messages.begin();
+	while (it != Messages::messages.end()) {
+		if (it->toId == toId) {
+			std::string deletedMessage = it->message;
+			int id = it->id;
+			it = Messages::messages.erase(it);
+			message += colored("Message '" + deletedMessage + "' has been deleted.\n", "green");
+		}
+		else {
+			++it;
+		}
+	}
+
+	if (message == "") {
+		return colored("This user has no messages.\n", "red");
+	}
+	Messages::save();
+	return message;
+}
+
+std::string Messages::deleteAllByToId(int userId) {
+	std::string message = "";
+	std::vector<Message>::iterator it = Messages::messages.begin();
+	while (it != Messages::messages.end()) {
+		if (it->toId == userId) {
+			std::string deletedMessage = it->message;
+			int id = it->id;
+			it = Messages::messages.erase(it);
+			message += colored("Message '" + deletedMessage + "' has been deleted.\n", "green");
+		}
+		else {
+			++it;
+		}
+	}
+
+	if (message == "") {
+		return colored("This user has no messages.\n", "red");
+	}
+	Messages::save();
+	return message;
+}

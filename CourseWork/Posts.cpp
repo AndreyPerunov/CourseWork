@@ -303,27 +303,27 @@ std::string Posts::updateById() {
 		if (it->id == id) {
 			std::string message = "";
 			std::string answer;
-			std::cout << "Whould you like to change the title? (y/n): ";
+			std::cout << "Whould you like to change the title? (y - to change): ";
 			std::getline(std::cin, answer);
 			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
 				std::string oldTitle = it->title;
-				char* newTitle = getTitle();
+				char* newTitle = Posts::getTitle();
 				strncpy_s(it->title, sizeof(it->title), newTitle, _TRUNCATE);
 				message += colored(std::string("Title ") + oldTitle + " has been changed to " + newTitle + ".\n", "green");
 			}
-			std::cout << "Whould you like to change the body? (y/n): ";
+			std::cout << "Whould you like to change the body? (y - to change): ";
 			std::getline(std::cin, answer);
 			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
 				std::string oldBody = it->body;
-				char* newBody = getBody();
+				char* newBody = Posts::getBody();
 				strncpy_s(it->body, sizeof(it->body), newBody, _TRUNCATE);
 				message += colored(std::string("Body ") + oldBody + " has been changed to " + newBody + ".\n", "green");
 			}
-			std::cout << "Whould you like to change the author id? (y/n): ";
+			std::cout << "Whould you like to change the author id? (y - to change): ";
 			std::getline(std::cin, answer);
 			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
 				int oldAuthor = it->authorId;
-				int newAuthor = getAuthorId();
+				int newAuthor = Posts::getAuthorId();
 				it->authorId = newAuthor;
 				message += colored("Author " + std::to_string(oldAuthor) + " has been changed to " + std::to_string(newAuthor) + ".\n", "green");
 			}
@@ -378,7 +378,7 @@ std::string Posts::deleteAllByAythorId() {
 	}
 
 	if (message == "") {
-		return colored("This user has no posts", "red");
+		return colored("This user has no posts.\n", "red");
 	}
 	Posts::save();
 	return message;

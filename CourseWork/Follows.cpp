@@ -239,14 +239,14 @@ std::string Follows::updateById() {
 			std::string answer;
 			int newFollowerId = it->followerId;
 			int newFollowingId = it->followingId;
-			std::cout << "Whould you like to change the follower id? (y/n): ";
+			std::cout << "Whould you like to change the follower id? (y - to change): ";
 			std::getline(std::cin, answer);
 			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
 				int oldFollowerId = it->followerId;
 				newFollowerId = getUserId("follower id");
 				message += colored("Follower id " + std::to_string(oldFollowerId) + " has been changed to " + std::to_string(newFollowerId) + ".\n", "green");
 			}
-			std::cout << "Whould you like to change the following id? (y/n): ";
+			std::cout << "Whould you like to change the following id? (y - to change): ";
 			std::getline(std::cin, answer);
 			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
 				int oldFollowingId = it->followingId;

@@ -25,6 +25,16 @@ class Messages {
 		void readData();
 		std::string create();
 		std::string readOneById();
+		std::string readAllById();
+		std::string readAllByFromId();
+		std::string readAllByToId();
+		std::string readAllByMessages();
+		std::string updateById();
+		std::string deleteOneById();
+		std::string deleteAllByFromId();
+		std::string deleteAllByFromId(int userId);
+		std::string deleteAllByToId();
+		std::string deleteAllByToId(int userId);
 	private:
 		std::vector<Message> messages;
 		std::string path;

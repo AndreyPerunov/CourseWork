@@ -252,14 +252,14 @@ std::string PostsLikes::updateById() {
 			int newPostId = it->postId;
 			int newUserId = it->userId;
 
-			std::cout << "Whould you like to change the post id? (y/n): ";
+			std::cout << "Whould you like to change the post id? (y - to change): ";
 			std::getline(std::cin, answer);
 			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
 				int oldPostId = it->postId;
 				newPostId = getPostId();
 				message += colored("Post id " + std::to_string(oldPostId) + " has been changed to " + std::to_string(newPostId) + ".\n", "green");
 			}
-			std::cout << "Whould you like to change the user id? (y/n): ";
+			std::cout << "Whould you like to change the user id? (y - to change): ";
 			std::getline(std::cin, answer);
 			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
 				int oldUserId = it->userId;

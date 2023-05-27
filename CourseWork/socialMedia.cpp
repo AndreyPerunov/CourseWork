@@ -176,18 +176,21 @@ void SocialMedia::editDB(std::string title) {
                 posts.readData();
                 postsLikes.readData();
                 follows.readData();
+                messages.readData();
             }
             if (selectedOption == "/Users/delete/by username") {
                 flashMessage = users.deleteByUsername();
                 posts.readData();
                 postsLikes.readData();
                 follows.readData();
+                messages.readData();
             }
             if (selectedOption == "/Users/delete/by email") {
                 flashMessage = users.deleteByEmail();
                 posts.readData();
                 postsLikes.readData();
                 follows.readData();
+                messages.readData();
             }
 
             ///////////////////////
@@ -331,6 +334,37 @@ void SocialMedia::editDB(std::string title) {
                 flashMessage = messages.readOneById();
             }
 
+            // READ ALL
+            if (selectedOption == "/Messages/readAll/sort by id") {
+                flashMessage = messages.readAllById();
+            }
+            if (selectedOption == "/Messages/readAll/sort by from id") {
+                flashMessage = messages.readAllByFromId();
+            }
+            if (selectedOption == "/Messages/readAll/sort by to id") {
+                flashMessage = messages.readAllByToId();
+            }
+            if (selectedOption == "/Messages/readAll/sort by message") {
+                flashMessage = messages.readAllByMessages();
+            }
+
+            // UPDATE
+            if (selectedOption == "/Messages/update/by id") {
+                flashMessage = messages.updateById();
+            }
+
+            // DELETE ONE
+            if (selectedOption == "/Messages/deleteOne/by id") {
+                flashMessage = messages.deleteOneById();
+            }
+
+            // DELETE ALL
+            if (selectedOption == "/Messages/deleteAll/by from id") {
+                flashMessage = messages.deleteAllByFromId();
+            }
+            if (selectedOption == "/Messages/deleteAll/by to id") {
+                flashMessage = messages.deleteAllByToId();
+            }
 
             // ".../Home"
             if (selectedOption == "/Home") break;
