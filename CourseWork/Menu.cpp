@@ -12,15 +12,16 @@ Menu::Menu(std::string data, Menu* parent) {
 
 Menu* Menu::addChild(std::string data) {
     Menu* child = new Menu(data, this);
-    childrens.push_back(child);
+    children.push_back(child);
     return child;
 }
 
 void Menu::addGoBack(std::string data) {
     Menu* child = new Menu(data, this);
     child->goBack = true;
-    childrens.push_back(child);
+    children.push_back(child);
 }
+
 std::string Menu::navigate() {
     int selectedOption = 0;
     char key;
@@ -28,7 +29,7 @@ std::string Menu::navigate() {
     std::string path = currentMenu->data;
     while (true) {
         // If edge - return
-        if (currentMenu->childrens.empty()) {
+        if (currentMenu->children.empty()) {
             return path;
         }
 
@@ -39,7 +40,7 @@ std::string Menu::navigate() {
         key = _getch();
         // Arrow down key
         if (key == 80) {
-            if (selectedOption >= currentMenu->childrens.size() - 1) {
+            if (selectedOption >= currentMenu->children.size() - 1) {
                 selectedOption = 0;
             }
             else {
@@ -49,7 +50,7 @@ std::string Menu::navigate() {
         // Arrow up key
         if (key == 72) {
             if (selectedOption <= 0) {
-                selectedOption = currentMenu->childrens.size() - 1;
+                selectedOption = currentMenu->children.size() - 1;
             }
             else {
                 selectedOption--;
@@ -59,14 +60,14 @@ std::string Menu::navigate() {
         // Enter key
         if (key == '\r') {
             // Go back
-            if (currentMenu->childrens[selectedOption]->goBack) {
+            if (currentMenu->children[selectedOption]->goBack) {
                 currentMenu = currentMenu->parent;
                 std::size_t pos = path.find_last_of('/');
                 path.erase(pos);
             }
             // Go deeper
             else {
-                currentMenu = currentMenu->childrens[selectedOption];
+                currentMenu = currentMenu->children[selectedOption];
                 path += '/' + currentMenu->data;
             }
             selectedOption = 0;
@@ -81,7 +82,7 @@ std::string Menu::navigate(std::string &flashMessage) {
     std::string path = currentMenu->data;
     while (true) {
         // If edge - return
-        if (currentMenu->childrens.empty()) {
+        if (currentMenu->children.empty()) {
             return path;
         }
 
@@ -94,7 +95,7 @@ std::string Menu::navigate(std::string &flashMessage) {
         key = _getch();
         // Arrow down key
         if (key == 80) {
-            if (selectedOption >= currentMenu->childrens.size() - 1) {
+            if (selectedOption >= currentMenu->children.size() - 1) {
                 selectedOption = 0;
             }
             else {
@@ -104,7 +105,7 @@ std::string Menu::navigate(std::string &flashMessage) {
         // Arrow up key
         if (key == 72) {
             if (selectedOption <= 0) {
-                selectedOption = currentMenu->childrens.size() - 1;
+                selectedOption = currentMenu->children.size() - 1;
             }
             else {
                 selectedOption--;
@@ -114,14 +115,14 @@ std::string Menu::navigate(std::string &flashMessage) {
         // Enter key
         if (key == '\r') {
             // Go back
-            if (currentMenu->childrens[selectedOption]->goBack) {
+            if (currentMenu->children[selectedOption]->goBack) {
                 currentMenu = currentMenu->parent;
                 std::size_t pos = path.find_last_of('/');
                 path.erase(pos);
             }
             // Go deeper
             else {
-                currentMenu = currentMenu->childrens[selectedOption];
+                currentMenu = currentMenu->children[selectedOption];
                 path += '/' + currentMenu->data;
             }
             selectedOption = 0;
@@ -130,11 +131,11 @@ std::string Menu::navigate(std::string &flashMessage) {
 }
 
 void Menu::displayChildren(int selectedOption) {
-    for (size_t i = 0; i < childrens.size(); ++i) {
+    for (size_t i = 0; i < children.size(); ++i) {
         if (selectedOption == i) {
-            std::cout << colored('>'+childrens[i]->data, "green") << '\n';
+            std::cout << colored('>'+children[i]->data, "green") << '\n';
         } else {
-            std::cout << ' ' << childrens[i]->data << '\n';
+            std::cout << ' ' << children[i]->data << '\n';
         }
     }
 }

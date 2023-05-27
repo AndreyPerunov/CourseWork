@@ -18,9 +18,9 @@ class Menu {
         std::string navigate();
         std::string navigate(std::string &flashMessage);
     private:
-        void displayChildren(int selectedOption = 0); // Be part of a class or be sepparate function?
+        void displayChildren(int selectedOption = 0);
         std::string data;
-        std::vector<Menu*> childrens;
+        std::vector<Menu*> children;
         Menu* parent;
         bool goBack = false;
 };

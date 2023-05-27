@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <regex>
+#include <string>
 #include "Menu.h"
 #include "Functions.h"
 #include "Users.h"
@@ -22,6 +23,7 @@ class SocialMedia {
 		Menu* buildMenu();
 		Menu* buildDBMenu(std::string title);
 		void editDB(std::string title);
+		std::string getDBTitle();
 };
 
 #endif // !_SOCIALMEDIA_H_

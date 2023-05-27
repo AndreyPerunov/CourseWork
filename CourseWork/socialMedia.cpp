@@ -376,6 +376,28 @@ void SocialMedia::editDB(std::string title) {
     }
 }
 
+std::string SocialMedia::getDBTitle() {
+    std::string title;
+    std::regex pattern("[a-zA-Z0-9\\-_]+");
+
+    while (true) {
+        std::cout << "Enter " << colored("db title", "blue") << ": ";
+        std::getline(std::cin, title);
+        if (!std::regex_match(title, pattern)) {
+            std::cout << colored("Title can contain only english letters, numbers and special characters ('-', '_').", "red") << '\n';
+        }
+        else if (title.length() > 50) {
+            std::cout << colored("Title can't exceed 50 characters.", "red") << '\n';
+        }
+        else if (title.length() < 1) {
+            std::cout << colored("Title must be at least 1 characters long.", "red") << '\n';
+        }
+        else {
+            return title;
+        }
+    }
+}
+
 SocialMedia::SocialMedia() {
     std::string flashMessage = "";
     while (true) {
@@ -384,9 +406,7 @@ SocialMedia::SocialMedia() {
 
         // "Home/Create DB"
         if (selectedOption == "Home/Create DB") {
-            std::string DBTitle = "undefined";
-            std::cout << "Title: ";
-            std::cin >> DBTitle;
+            std::string DBTitle = SocialMedia::getDBTitle();
             fs::path folderPath(DBTitle);
             try {
                 if (!fs::create_directory(folderPath)) {
@@ -397,7 +417,7 @@ SocialMedia::SocialMedia() {
                 }
             }
             catch (fs::filesystem_error e) {
-                flashMessage = colored("Error creating folder: " + std::string(e.what()), "red");
+                flashMessage = colored("Error creating database: " + std::string(e.what()), "red");
             }
         }
 
@@ -437,7 +457,7 @@ bool SocialMedia::deleteSocialMedia(std::string path) {
             return true;
         }
         else {
-            // The provided path does not exist or is not a directory.
+            // Path does not exist or is not a directory.
             return false;
         }
     }
