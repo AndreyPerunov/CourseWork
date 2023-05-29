@@ -60,6 +60,22 @@ int Users::getId() {
     return stoi(id);
 }
 
+int Users::getNumber(std::string prompt) {
+    std::string id;
+    std::regex pattern("[0-9]+");
+    while (true) {
+        std::cout << "Enter " << colored(prompt, "blue") << ": ";
+        std::getline(std::cin, id);
+        if (!std::regex_match(id, pattern)) {
+            std::cout << colored(prompt + " contains only numbers.", "red") << '\n';
+        }
+        else {
+            break;
+        }
+    }
+    return stoi(id);
+}
+
 char* Users::getValidUsername() {
     std::string username;
     std::regex pattern("[a-zA-Z0-9]+");
@@ -586,4 +602,86 @@ std::string Users::save() {
     usersFile.close();
 
     return colored("Users were saved successfully.", "green");
+}
+
+// Summary
+std::string Users::getNumberOfUsers(){
+    std::string output = "There is " + colored(std::to_string(Users::users.size()), "blue");
+
+    if (Users::users.size() == 1) {
+        output += " user.";
+    } else {
+        output += " users.";
+    }
+
+    return output;
+}
+
+std::string Users::getNumberOfUsersWithPosts(){
+    Posts posts(Users::path);
+
+    int minPosts = Users::getNumber("number of posts");
+
+    int count = 0;
+    for (User user : Users::users) {
+        if(minPosts < posts.getPostsCount(user.id)) {
+            count++;
+        }
+    }
+
+    std::string output = "There is " + colored(std::to_string(count), "blue");
+
+    if (count == 1) {
+        output += " user with posts more than " + std::to_string(minPosts) + ".";
+    } else {
+        output += " users with posts more than " + std::to_string(minPosts) + ".";
+    }
+
+    return output;
+}
+
+std::string Users::getNumberOfUsersWithFollowers(){
+    Follows follows(Users::path);
+
+    int minFollowers = Users::getNumber("number of followers");
+
+    int count = 0;
+    for (User user : Users::users) {
+        if(minFollowers < follows.getFollowersCount(user.id)) {
+            count++;
+        }
+    }
+
+    std::string output = "There is " + colored(std::to_string(count), "blue");
+
+    if (count == 1) {
+        output += " user with followers more than " + std::to_string(minFollowers) + ".";
+    } else {
+        output += " users with followers more than " + std::to_string(minFollowers) + ".";
+    }
+
+    return output;
+}
+
+std::string Users::getNumberOfUsersWithFollowing(){
+    Follows follows(Users::path);
+
+    int minFollowing = Users::getNumber("number of following");
+
+    int count = 0;
+    for (User user : Users::users) {
+        if(minFollowing < follows.getFollowingCount(user.id)) {
+            count++;
+        }
+    }
+
+    std::string output = "There is " + colored(std::to_string(count), "blue");
+
+    if (count == 1) {
+        output += " user with following more than " + std::to_string(minFollowing) + ".";
+    } else {
+        output += " users with following more than " + std::to_string(minFollowing) + ".";
+    }
+
+    return output;
 }

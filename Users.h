@@ -39,6 +39,10 @@ class Users {
 		std::string deleteById();
 		std::string deleteByUsername();
 		std::string deleteByEmail();
+		std::string getNumberOfUsers();
+		std::string getNumberOfUsersWithPosts();
+		std::string getNumberOfUsersWithFollowers();
+		std::string getNumberOfUsersWithFollowing();
 		bool idExists(int id);
 		std::string getUsernameById(int id);
 	private:
@@ -48,6 +52,7 @@ class Users {
 		bool usernameExists(std::string username);
 		bool emailExists(std::string username);
 		int getId();
+		int getNumber(std::string prompt);
 		char* getValidUsername();
 		char* getUsername();
 		char* getPassword();

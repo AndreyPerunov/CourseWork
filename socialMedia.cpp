@@ -22,6 +22,11 @@ Menu* SocialMedia::buildMenu(std::string title) {
     deleteOneUser->addChild("by id");
     deleteOneUser->addChild("by username");
     deleteOneUser->addChild("by email");
+    Menu* summaryUsers = users->addChild("summary");
+    summaryUsers->addChild("get number of users");
+    summaryUsers->addChild("get number of users with posts more than...");
+    summaryUsers->addChild("get number of users with followers more than...");
+    summaryUsers->addChild("get number of users with following more than...");
     users->addGoBack("Go back");
 
     Menu* posts = root->addChild("Posts");
@@ -35,6 +40,9 @@ Menu* SocialMedia::buildMenu(std::string title) {
     posts->addChild("update")->addChild("by id");
     posts->addChild("deleteOne")->addChild("by id");
     posts->addChild("deleteAll")->addChild("by author id");
+    Menu* summaryPosts = posts->addChild("summary");
+    summaryPosts->addChild("get number of posts");
+    summaryPosts->addChild("get number of posts where number of likes is bigger than...");
     posts->addGoBack("Go back");
 
     Menu* postsLikes = root->addChild("Posts Likes");
@@ -48,6 +56,8 @@ Menu* SocialMedia::buildMenu(std::string title) {
     Menu* deleteAllPostsLikes = postsLikes->addChild("deleteAll");
     deleteAllPostsLikes->addChild("by user id");
     deleteAllPostsLikes->addChild("by post id");
+    Menu* summaryPostsLikes = postsLikes->addChild("summary");
+    summaryPostsLikes->addChild("get number of postsLikes");
     postsLikes->addGoBack("Go back");
 
     Menu* follows = root->addChild("Follows");
@@ -61,6 +71,8 @@ Menu* SocialMedia::buildMenu(std::string title) {
     Menu* deleteAllFollows= follows->addChild("deleteAll");
     deleteAllFollows->addChild("by follower id");
     deleteAllFollows->addChild("by following id");
+    Menu* summaryFollows = follows->addChild("summary");
+    summaryFollows->addChild("get number of follows");
     follows->addGoBack("Go back");
 
     Menu* messages = root->addChild("Messages");
@@ -76,14 +88,15 @@ Menu* SocialMedia::buildMenu(std::string title) {
     Menu* deleteAllMessages = messages->addChild("deleteAll");
     deleteAllMessages->addChild("by from id");
     deleteAllMessages->addChild("by to id");
+    Menu* summaryMessages = messages->addChild("summary");
+    summaryMessages->addChild("get number of messages");
+    summaryMessages->addChild("get number of messages sent to yourself");
     messages->addGoBack("Go back");
 
      root->addChild("Quit");
 
     return root;
 }
-
-
 
 SocialMedia::SocialMedia(std::string title) {  
     try {
@@ -182,6 +195,20 @@ SocialMedia::SocialMedia(std::string title) {
                 messages.readData();
             }
 
+            // SUMMARY
+            if (selectedOption == "/Users/summary/get number of users") {
+                flashMessage = users.getNumberOfUsers();
+            }
+            if (selectedOption == "/Users/summary/get number of users with posts more than...") {
+                flashMessage = users.getNumberOfUsersWithPosts();
+            }
+            if (selectedOption == "/Users/summary/get number of users with followers more than...") {
+                flashMessage = users.getNumberOfUsersWithFollowers();
+            }
+            if (selectedOption == "/Users/summary/get number of users with following more than...") {
+                flashMessage = users.getNumberOfUsersWithFollowing();
+            }
+
             ///////////////////////
             // POSTS
             ///////////////////////
@@ -226,6 +253,14 @@ SocialMedia::SocialMedia(std::string title) {
                 postsLikes.readData();
             }
 
+            // SUMMARY
+            if (selectedOption == "/Posts/summary/get number of posts") {
+                //TODO: flashMessage = posts.getNumberOfPosts();
+            }
+            if (selectedOption == "/Posts/summary/get number of posts where number of likes is bigger than...") {
+                //TODO: flashMessage = posts.getNumberOfPostsWithLikes();
+            }
+
             ///////////////////////
             // POSTS LIKES
             ///////////////////////
@@ -263,6 +298,11 @@ SocialMedia::SocialMedia(std::string title) {
                 flashMessage = postsLikes.deleteAllByUserId();
             }
 
+            // SUMMARY
+            if (selectedOption == "/Posts Likes/summary/get number of postsLikes") {
+                //TODO: flashMessage = postsLikes.getNumberOfPostsLikes();
+            }
+
             ///////////////////////
             // FOLLOWS
             ///////////////////////
@@ -298,6 +338,11 @@ SocialMedia::SocialMedia(std::string title) {
             }
             if (selectedOption == "/Follows/deleteAll/by following id") {
                 flashMessage = follows.deleteAllByFollowingId();
+            }
+
+            // SUMMARY
+            if (selectedOption == "/Follows/summary/get number of follows") {
+                //TODO: flashMessage = follows.getNumberOfFollows();
             }
 
             ///////////////////////
@@ -343,6 +388,14 @@ SocialMedia::SocialMedia(std::string title) {
             }
             if (selectedOption == "/Messages/deleteAll/by to id") {
                 flashMessage = messages.deleteAllByToId();
+            }
+
+            // SUMMARY
+            if (selectedOption == "/Messages/summary/get number of messages") {
+                //TODO: flashMessage = messages.getNumberOfMessages();
+            }
+            if (selectedOption == "/Messages/summary/get number of messages sent to yourself") {
+                //TODO: flashMessage = messages.getNumberOfMessagesSentYourself();
             }
 
             ///////////////////////
