@@ -300,7 +300,7 @@ SocialMedia::SocialMedia(std::string title) {
 
             // SUMMARY
             if (selectedOption == "/Posts Likes/summary/get number of postsLikes") {
-                //TODO: flashMessage = postsLikes.getNumberOfPostsLikes();
+                flashMessage = postsLikes.getNumberOfPostsLikes();
             }
 
             ///////////////////////

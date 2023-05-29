@@ -33,6 +33,7 @@ class PostsLikes {
 		std::string deleteAllByPostId(int postId);
 		std::string deleteAllByUserId();
 		std::string deleteAllByUserId(int userId);
+		std::string getNumberOfPostsLikes();
 		int getLikesCount(int postId);
 	private:
 		std::vector<PostLike> postsLikes;

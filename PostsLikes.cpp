@@ -364,3 +364,15 @@ std::string PostsLikes::deleteAllByUserId(int userId) {
 
 	return message;
 }
+
+std::string PostsLikes::getNumberOfPostsLikes() {
+	std::string output = "There is " + colored(std::to_string(PostsLikes::postsLikes.size()), "blue");
+
+    if (PostsLikes::postsLikes.size() == 1) {
+        output += " post like.";
+    } else {
+        output += " posts likes.";
+    }
+
+    return output;
+}
