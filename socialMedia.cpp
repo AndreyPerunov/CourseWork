@@ -83,15 +83,36 @@ Menu* SocialMedia::buildMenu(std::string title) {
     return root;
 }
 
-SocialMedia::SocialMedia(std::string title) {
+
+
+SocialMedia::SocialMedia(std::string title) {  
     try {
+        std::string flashMessage = "";
+
+        fs::path folderPath(title);
+
+        // Creating directory
+        try {
+            if (!fs::create_directory(folderPath)) {
+                flashMessage = colored("Database '" + title + "' already exists.", "yellow");
+            }
+            else {
+                flashMessage = colored("Database '" + title + "' have been created.", "green");
+            }
+        }
+        catch (fs::filesystem_error& e) {
+            std::cout << colored("Error creating database: " + std::string(e.what()), "red");
+            std::cin.get();
+            return;
+        }
+
         Users users("./" + title + "/");
         Posts posts("./" + title + "/");
         PostsLikes postsLikes("./" + title + "/");
         Follows follows("./" + title + "/");
         Messages messages("./" + title + "/");
 
-        std::string flashMessage = "";
+        // Navigation
         while (true) {
             std::string selectedOption = buildMenu(title)->navigate(flashMessage);
             std::cout << '\n' + colored(selectedOption, "green") + '\n';
