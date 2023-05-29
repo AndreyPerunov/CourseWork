@@ -23,7 +23,7 @@ void Menu::addGoBack(std::string data) {
 }
 
 std::string Menu::navigate() {
-    int selectedOption = 0;
+    size_t selectedOption = 0;
     char key;
     Menu* currentMenu = this;
     std::string path = currentMenu->data;
@@ -76,7 +76,7 @@ std::string Menu::navigate() {
 }
 
 std::string Menu::navigate(std::string &flashMessage) {
-    int selectedOption = 0;
+    size_t selectedOption = 0;
     char key;
     Menu* currentMenu = this;
     std::string path = currentMenu->data;
@@ -130,7 +130,7 @@ std::string Menu::navigate(std::string &flashMessage) {
     }
 }
 
-void Menu::displayChildren(int selectedOption) {
+void Menu::displayChildren(size_t selectedOption) {
     for (size_t i = 0; i < children.size(); ++i) {
         if (selectedOption == i) {
             std::cout << colored('>'+children[i]->data, "green") << '\n';

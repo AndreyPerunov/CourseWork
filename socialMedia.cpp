@@ -5,12 +5,12 @@ Menu* SocialMedia::buildMenu() {
     Menu* root = new Menu("Home");
 
     // CREATE
-    Menu* createDB = root->addChild("Create DB");
+    root->addChild("Create DB");
 
     // SELECT
     Menu* selectDB = root->addChild("Select DB");
     for (auto entry : fs::directory_iterator("./")) {
-        if (fs::is_directory(entry.status()) && entry.path() != "./x64" && entry.path() != "./.git") {
+        if (fs::is_directory(entry.status()) && entry.path() != "./x64" && entry.path() != "./.git" && entry.path() != "./.vscode") {
             selectDB->addChild(entry.path().filename().string());
         }
     }
@@ -19,7 +19,7 @@ Menu* SocialMedia::buildMenu() {
     // DELETE
     Menu* deleteDB = root->addChild("Delete DB");
     for (auto entry : fs::directory_iterator("./")) {
-        if (fs::is_directory(entry.status()) && entry.path() != "./x64" && entry.path() != "./.git") {
+        if (fs::is_directory(entry.status()) && entry.path() != "./x64" && entry.path() != "./.git" && entry.path() != "./.vscode") {
             deleteDB->addChild(entry.path().filename().string());
         }
     }
@@ -370,7 +370,7 @@ void SocialMedia::editDB(std::string title) {
             if (selectedOption == "/Home") break;
         }
     }
-    catch (std::exception e) {
+    catch (std::exception& e) {
         std::cout << colored(e.what(), "red");
         return;
     }
@@ -416,7 +416,7 @@ SocialMedia::SocialMedia() {
                     flashMessage = colored("Database '" + DBTitle + "' have been created.", "green");
                 }
             }
-            catch (fs::filesystem_error e) {
+            catch (fs::filesystem_error& e) {
                 flashMessage = colored("Error creating database: " + std::string(e.what()), "red");
             }
         }

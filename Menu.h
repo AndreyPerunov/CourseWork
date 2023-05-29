@@ -18,7 +18,7 @@ class Menu {
         std::string navigate();
         std::string navigate(std::string &flashMessage);
     private:
-        void displayChildren(int selectedOption = 0);
+        void displayChildren(size_t selectedOption = 0);
         std::string data;
         std::vector<Menu*> children;
         Menu* parent;

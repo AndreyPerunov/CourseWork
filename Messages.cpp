@@ -315,7 +315,6 @@ std::string Messages::deleteAllByFromId() {
 	while (it != Messages::messages.end()) {
 		if (it->fromId == fromId) {
 			std::string deletedMessage = it->message;
-			int id = it->id;
 			it = Messages::messages.erase(it);
 			message += colored("Message '" + deletedMessage + "' has been deleted.\n", "green");
 		}
@@ -337,7 +336,6 @@ std::string Messages::deleteAllByFromId(int userId) {
 	while (it != Messages::messages.end()) {
 		if (it->fromId == userId) {
 			std::string deletedMessage = it->message;
-			int id = it->id;
 			it = Messages::messages.erase(it);
 			message += colored("Message '" + deletedMessage + "' has been deleted.\n", "green");
 		}
@@ -361,7 +359,6 @@ std::string Messages::deleteAllByToId() {
 	while (it != Messages::messages.end()) {
 		if (it->toId == toId) {
 			std::string deletedMessage = it->message;
-			int id = it->id;
 			it = Messages::messages.erase(it);
 			message += colored("Message '" + deletedMessage + "' has been deleted.\n", "green");
 		}
@@ -383,7 +380,6 @@ std::string Messages::deleteAllByToId(int userId) {
 	while (it != Messages::messages.end()) {
 		if (it->toId == userId) {
 			std::string deletedMessage = it->message;
-			int id = it->id;
 			it = Messages::messages.erase(it);
 			message += colored("Message '" + deletedMessage + "' has been deleted.\n", "green");
 		}
