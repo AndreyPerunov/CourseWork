@@ -352,3 +352,15 @@ std::string Follows::deleteAllByFollowingId(int userId) {
 
 	return message;
 }
+
+std::string Follows::getNumberOfFollows(){
+	std::string output = "There is " + colored(std::to_string(Follows::follows.size()), "blue");
+
+    if (Follows::follows.size() == 1) {
+        output += " follow.";
+    } else {
+        output += " follows.";
+    }
+	
+	return output;
+}

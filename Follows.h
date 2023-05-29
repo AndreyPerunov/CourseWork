@@ -31,6 +31,7 @@ class Follows {
 		std::string deleteAllByFollowerId(int userId);
 		std::string deleteAllByFollowingId();
 		std::string deleteAllByFollowingId(int userId);
+		std::string getNumberOfFollows();
 		int getFollowersCount(int userId);
 		int getFollowingCount(int userId);
 		void readData();

@@ -342,7 +342,7 @@ SocialMedia::SocialMedia(std::string title) {
 
             // SUMMARY
             if (selectedOption == "/Follows/summary/get number of follows") {
-                //TODO: flashMessage = follows.getNumberOfFollows();
+                flashMessage = follows.getNumberOfFollows();
             }
 
             ///////////////////////
