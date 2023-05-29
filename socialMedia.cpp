@@ -1,37 +1,7 @@
 #include "SocialMedia.h"
 namespace fs = std::filesystem;
 
-Menu* SocialMedia::buildMenu() {
-    Menu* root = new Menu("Home");
-
-    // CREATE
-    root->addChild("Create DB");
-
-    // SELECT
-    Menu* selectDB = root->addChild("Select DB");
-    for (auto entry : fs::directory_iterator("./")) {
-        if (fs::is_directory(entry.status()) && entry.path() != "./x64" && entry.path() != "./.git" && entry.path() != "./.vscode") {
-            selectDB->addChild(entry.path().filename().string());
-        }
-    }
-    selectDB->addGoBack("Go back");
-
-    // DELETE
-    Menu* deleteDB = root->addChild("Delete DB");
-    for (auto entry : fs::directory_iterator("./")) {
-        if (fs::is_directory(entry.status()) && entry.path() != "./x64" && entry.path() != "./.git" && entry.path() != "./.vscode") {
-            deleteDB->addChild(entry.path().filename().string());
-        }
-    }
-    deleteDB->addGoBack("Go back");
-
-    // QUIT
-    root->addChild("Quit");
-
-    return root;
-}
-
-Menu* SocialMedia::buildDBMenu(std::string title) {
+Menu* SocialMedia::buildMenu(std::string title) {
     Menu* root = new Menu(title);
  
     Menu* users = root->addChild("Users");
@@ -74,7 +44,6 @@ Menu* SocialMedia::buildDBMenu(std::string title) {
     readAllPostsLikes->addChild("sort by id");
     readAllPostsLikes->addChild("sort by post id");
     readAllPostsLikes->addChild("sort by user id");
-    postsLikes->addChild("update")->addChild("by id");
     postsLikes->addChild("deleteOne")->addChild("by id");
     Menu* deleteAllPostsLikes = postsLikes->addChild("deleteAll");
     deleteAllPostsLikes->addChild("by user id");
@@ -88,7 +57,6 @@ Menu* SocialMedia::buildDBMenu(std::string title) {
     readAllFollows->addChild("sort by id");
     readAllFollows->addChild("sort by follower id");
     readAllFollows->addChild("sort by following id");
-    follows->addChild("update")->addChild("by id");
     follows->addChild("deleteOne")->addChild("by id");
     Menu* deleteAllFollows= follows->addChild("deleteAll");
     deleteAllFollows->addChild("by follower id");
@@ -110,12 +78,12 @@ Menu* SocialMedia::buildDBMenu(std::string title) {
     deleteAllMessages->addChild("by to id");
     messages->addGoBack("Go back");
 
-     root->addChild("Home");
+     root->addChild("Quit");
 
     return root;
 }
 
-void SocialMedia::editDB(std::string title) {
+SocialMedia::SocialMedia(std::string title) {
     try {
         Users users("./" + title + "/");
         Posts posts("./" + title + "/");
@@ -125,7 +93,7 @@ void SocialMedia::editDB(std::string title) {
 
         std::string flashMessage = "";
         while (true) {
-            std::string selectedOption = buildDBMenu(title)->navigate(flashMessage);
+            std::string selectedOption = buildMenu(title)->navigate(flashMessage);
             std::cout << '\n' + colored(selectedOption, "green") + '\n';
             selectedOption = selectedOption.substr(title.length());
 
@@ -261,11 +229,6 @@ void SocialMedia::editDB(std::string title) {
                 flashMessage = postsLikes.readAllByUserId();
             }
 
-            // UPDATE
-            if (selectedOption == "/Posts Likes/update/by id") {
-                flashMessage = postsLikes.updateById();
-            }
-
             // DELETE ONE
             if (selectedOption == "/Posts Likes/deleteOne/by id") {
                 flashMessage = postsLikes.deleteOneById();
@@ -301,11 +264,6 @@ void SocialMedia::editDB(std::string title) {
             }
             if (selectedOption == "/Follows/readAll/sort by following id") {
                 flashMessage = follows.readAllByFollowingId();
-            }
-
-            // UPDATE
-            if (selectedOption == "/Follows/update/by id") {
-                flashMessage = follows.updateById();
             }
 
             // DELETE ONE
@@ -366,103 +324,14 @@ void SocialMedia::editDB(std::string title) {
                 flashMessage = messages.deleteAllByToId();
             }
 
-            // ".../Home"
-            if (selectedOption == "/Home") break;
+            ///////////////////////
+            // QUIT
+            ///////////////////////
+            if (selectedOption == "/Quit") break;
         }
     }
     catch (std::exception& e) {
         std::cout << colored(e.what(), "red");
         return;
-    }
-}
-
-std::string SocialMedia::getDBTitle() {
-    std::string title;
-    std::regex pattern("[a-zA-Z0-9\\-_]+");
-
-    while (true) {
-        std::cout << "Enter " << colored("db title", "blue") << ": ";
-        std::getline(std::cin, title);
-        if (!std::regex_match(title, pattern)) {
-            std::cout << colored("Title can contain only english letters, numbers and special characters ('-', '_').", "red") << '\n';
-        }
-        else if (title.length() > 50) {
-            std::cout << colored("Title can't exceed 50 characters.", "red") << '\n';
-        }
-        else if (title.length() < 1) {
-            std::cout << colored("Title must be at least 1 characters long.", "red") << '\n';
-        }
-        else {
-            return title;
-        }
-    }
-}
-
-SocialMedia::SocialMedia() {
-    std::string flashMessage = "";
-    while (true) {
-        std::string selectedOption = buildMenu()->navigate(flashMessage);
-        std::cout << '\n' + colored(selectedOption, "green") + '\n';
-
-        // "Home/Create DB"
-        if (selectedOption == "Home/Create DB") {
-            std::string DBTitle = SocialMedia::getDBTitle();
-            fs::path folderPath(DBTitle);
-            try {
-                if (!fs::create_directory(folderPath)) {
-                    flashMessage = colored("Database '" + DBTitle + "' already exists.", "red");
-                }
-                else {
-                    flashMessage = colored("Database '" + DBTitle + "' have been created.", "green");
-                }
-            }
-            catch (fs::filesystem_error& e) {
-                flashMessage = colored("Error creating database: " + std::string(e.what()), "red");
-            }
-        }
-
-        // "Home/Select DB/"
-        std::regex selectPattern("Home\\/Select DB\\/([\\w\\s()-]+)");
-        std::smatch matchToSelect;
-        if (std::regex_search(selectedOption, matchToSelect, selectPattern)) {
-            if (fs::exists("./" + matchToSelect[1].str())) {
-                editDB(matchToSelect[1]);
-            }
-            else {
-                flashMessage = colored("Error selecting " + matchToSelect[1].str(), "red");
-            }
-        }
-
-        // "Home/Delete DB/"
-        std::regex deletePattern("Home\\/Delete DB\\/([\\w\\s]+)");
-        std::smatch matchToDelete;
-        if (std::regex_search(selectedOption, matchToDelete, deletePattern)) {
-            if (SocialMedia::deleteSocialMedia(matchToDelete[1])) {
-                flashMessage = colored("Database '" + matchToDelete[1].str() + "' have been deleted.", "green");
-            }
-            else {
-                flashMessage = colored("Error deleting " + matchToDelete[1].str(), "red");
-            }
-        }
-        
-        // "Home/Quit"
-        if (selectedOption == "Home/Quit") break;
-    }
-}
-
-bool SocialMedia::deleteSocialMedia(std::string path) {
-    try {
-        if (fs::exists(path) && fs::is_directory(path)) {
-            fs::remove_all(path);
-            return true;
-        }
-        else {
-            // Path does not exist or is not a directory.
-            return false;
-        }
-    }
-    catch (const fs::filesystem_error& e) {
-        // Filesystem error
-        return false;
     }
 }

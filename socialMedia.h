@@ -17,13 +17,9 @@
 
 class SocialMedia {
 	public: 
-		SocialMedia();
-		bool deleteSocialMedia(std::string path);
+		SocialMedia(std::string title);
 	private:
-		Menu* buildMenu();
-		Menu* buildDBMenu(std::string title);
-		void editDB(std::string title);
-		std::string getDBTitle();
+		Menu* buildMenu(std::string title);
 };
 
 #endif // !_SOCIALMEDIA_H_

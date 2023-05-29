@@ -1,6 +1,6 @@
 #include "socialMedia.h"
 
 int main() {
-	SocialMedia db;
+	SocialMedia db("sample");
 	return 0;
 }

@@ -329,14 +329,6 @@ std::string Posts::updateById() {
 				strncpy_s(it->body, sizeof(it->body), newBody, _TRUNCATE);
 				message += colored(std::string("Body ") + oldBody + " has been changed to " + newBody + ".\n", "green");
 			}
-			std::cout << "Whould you like to change the author id? (y - to change): ";
-			std::getline(std::cin, answer);
-			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
-				int oldAuthor = it->authorId;
-				int newAuthor = Posts::getAuthorId();
-				it->authorId = newAuthor;
-				message += colored("Author " + std::to_string(oldAuthor) + " has been changed to " + std::to_string(newAuthor) + ".\n", "green");
-			}
 
 			if (message == "") {
 				return colored("Nothing was changed.", "green");

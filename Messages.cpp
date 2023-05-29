@@ -261,40 +261,11 @@ std::string Messages::updateById() {
 	int id = Messages::getId();
 	for (auto it = Messages::messages.begin(); it != Messages::messages.end(); ++it) {
 		if (it->id == id) {
-			std::string message = "";
-			std::string answer;
-			std::cout << "Whould you like to change the from id? (y - to change): ";
-			std::getline(std::cin, answer);
-			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
-				int oldFromId = it->fromId;
-				int newFromId = Messages::getUserId("from id");
-				it->fromId = newFromId;
-				message += colored("From id " + std::to_string(oldFromId) + " has been changed to " + std::to_string(newFromId) + ".\n", "green");
-			}
-			std::cout << "Whould you like to change the to id? (y/n): ";
-			std::getline(std::cin, answer);
-			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
-				int oldToID = it->toId;
-				int newToId = Messages::getUserId("to id");
-				it->toId = newToId;
-				message += colored("To id " + std::to_string(oldToID) + " has been changed to " + std::to_string(newToId) + ".\n", "green");
-			}
-			std::cout << "Whould you like to change the message? (y/n): ";
-			std::getline(std::cin, answer);
-			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
-				std::string oldMessage = it->message;
-				char* newMessage = Messages::getMessage();
-				strncpy_s(it->message, sizeof(it->message), newMessage, _TRUNCATE);
-				message += colored("Message " + oldMessage + " has been changed to " + newMessage + ".\n", "green");
-			}
-
-			if (message == "") {
-				return colored("Nothing was changed.", "green");
-			}
-			else {
-				Messages::save();
-				return message;
-			}
+			std::string oldMessage = it->message;
+			char* newMessage = Messages::getMessage();
+			strncpy_s(it->message, sizeof(it->message), newMessage, _TRUNCATE);
+			Messages::save();
+			return colored("Message " + oldMessage + " has been changed to " + newMessage + ".\n", "green");
 		}
 	}
 

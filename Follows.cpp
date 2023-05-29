@@ -237,53 +237,6 @@ std::string Follows::readAllByFollowingId() {
 	return table.to_string();
 }
 
-// Update
-std::string Follows::updateById() {
-	std::cout << Follows::readAllById();
-	int id = Follows::getId();
-	for (auto it = Follows::follows.begin(); it != Follows::follows.end(); ++it) {
-		if (it->id == id) {
-			std::string message = "";
-			std::string answer;
-			int newFollowerId = it->followerId;
-			int newFollowingId = it->followingId;
-			std::cout << "Whould you like to change the follower id? (y - to change): ";
-			std::getline(std::cin, answer);
-			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
-				int oldFollowerId = it->followerId;
-				newFollowerId = getUserId("follower id");
-				message += colored("Follower id " + std::to_string(oldFollowerId) + " has been changed to " + std::to_string(newFollowerId) + ".\n", "green");
-			}
-			std::cout << "Whould you like to change the following id? (y - to change): ";
-			std::getline(std::cin, answer);
-			if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes") {
-				int oldFollowingId = it->followingId;
-				newFollowingId = getUserId("following id");
-				message += colored("Following id " + std::to_string(oldFollowingId) + " has been changed to " + std::to_string(newFollowingId) + ".\n", "green");
-			}
-
-			if (message == "") {
-				return colored("Nothing was changed.", "green");
-			}
-			else {
-				if (Follows::followed(newFollowerId, newFollowingId)) {
-					return colored("User " + std::to_string(newFollowerId) + " already following user " + std::to_string(newFollowingId) + ".", "red");
-				}
-				if (newFollowerId == newFollowingId) {
-					return colored("User can't follow himself.", "red");
-				}
-
-				it->followerId = newFollowerId;
-				it->followingId = newFollowingId;
-				Follows::save();
-				return message;
-			}
-		}
-	}
-
-	return colored("Follow does not exist.", "red");
-}
-
 // Delete One
 std::string Follows::deleteOneById() {
 	std::cout << Follows::readAllById();
