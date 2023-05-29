@@ -220,7 +220,9 @@ std::string Users::readOneById() {
 
             table << fort::header
                 << "ID" << "Username" << "Password" << "Email" << "Posts" << "Followers" << "Following" << fort::endr
-                << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr;
+                << user.id << user.username << cropLongText(user.password) << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr << fort::separator;
+            
+            table.row(0).set_cell_bg_color(fort::color::blue);
 
             return table.to_string();
         }
@@ -240,7 +242,9 @@ std::string Users::readOneByUsername() {
 
             table << fort::header
                 << "ID" << "Username" << "Password" << "Email" << "Posts" << "Followers" << "Following" << fort::endr
-                << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr;
+                << user.id << user.username << cropLongText(user.password) << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr << fort::separator;
+            
+            table.row(0).set_cell_bg_color(fort::color::blue);
 
             return table.to_string();
         }
@@ -260,7 +264,9 @@ std::string Users::readOneByEmail() {
 
             table << fort::header
                 << "ID" << "Username" << "Password" << "Email" << "Posts" << "Followers" << "Following" << fort::endr
-                << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr;
+                << user.id << user.username << cropLongText(user.password) << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr << fort::separator;
+
+            table.row(0).set_cell_bg_color(fort::color::blue);
 
             return table.to_string();
         }
@@ -282,9 +288,11 @@ std::string Users::readAllById(){
 
     // Set Content
     for (User user : Users::users) {
-        table << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr;
+        table << user.id << user.username << cropLongText(user.password) << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr << fort::separator;
     }
-
+    
+    table.row(0).set_cell_bg_color(fort::color::blue);
+    
     return table.to_string();
 }
 
@@ -308,8 +316,10 @@ std::string Users::readAllByUsername() {
 
     // Set Content
     for (User user : copyUsers) {
-        table << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr;
+        table << user.id << user.username << cropLongText(user.password) << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr << fort::separator;
     }
+
+    table.row(0).set_cell_bg_color(fort::color::blue);
 
     return table.to_string();
 }
@@ -334,8 +344,10 @@ std::string Users::readAllByEmail() {
 
     // Set Content
     for (User user : copyUsers) {
-        table << user.id << user.username << user.password << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr;
+        table << user.id << user.username << cropLongText(user.password) << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr << fort::separator;
     }
+
+    table.row(0).set_cell_bg_color(fort::color::blue);
 
     return table.to_string();
 }

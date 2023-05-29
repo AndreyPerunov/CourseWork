@@ -161,7 +161,9 @@ std::string PostsLikes::readOneById() {
 
 			table << fort::header
 				<< "ID" << "Post Id" << "Title" << "User Id" << "Username" << fort::endr
-				<< postLike.id << postLike.postId << posts.getTitleById(postLike.postId) << postLike.userId << users.getUsernameById(postLike.userId) << fort::endr;
+				<< postLike.id << postLike.postId << posts.getTitleById(postLike.postId) << postLike.userId << users.getUsernameById(postLike.userId) << fort::endr << fort::separator;
+
+			table.row(0).set_cell_bg_color(fort::color::light_red);
 
 			return table.to_string();
 		}
@@ -183,8 +185,10 @@ std::string PostsLikes::readAllById() {
 
 	// Set Content
 	for (PostLike postLike : PostsLikes::postsLikes) {
-		table << postLike.id << postLike.postId << posts.getTitleById(postLike.postId) << postLike.userId << users.getUsernameById(postLike.userId) << fort::endr;
+		table << postLike.id << postLike.postId << posts.getTitleById(postLike.postId) << postLike.userId << users.getUsernameById(postLike.userId) << fort::endr << fort::separator;
 	}
+
+	table.row(0).set_cell_bg_color(fort::color::light_red);
 
 	return table.to_string();
 }
@@ -212,6 +216,8 @@ std::string PostsLikes::readAllByPostId() {
 		table << postLike.id << postLike.postId << posts.getTitleById(postLike.postId) << postLike.userId << users.getUsernameById(postLike.userId) << fort::endr;
 	}
 
+	table.row(0).set_cell_bg_color(fort::color::light_red);
+
 	return table.to_string();
 }
 
@@ -238,6 +244,8 @@ std::string PostsLikes::readAllByUserId() {
 		table << postLike.id << postLike.postId << posts.getTitleById(postLike.postId) << postLike.userId << users.getUsernameById(postLike.userId) << fort::endr;
 	}
 
+	table.row(0).set_cell_bg_color(fort::color::light_red);
+	
 	return table.to_string();
 }
 

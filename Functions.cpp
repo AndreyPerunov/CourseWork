@@ -17,3 +17,16 @@ char* stoc(std::string string) {
 	strcpy_s(result, string.length() + 1, string.c_str());
 	return result;
 }
+
+std::string cropLongText(std::string longText) {
+    const int charLimit = 15;
+    for (std::size_t i = charLimit; i < longText.size(); i += charLimit + 1) {
+        if (longText[i - 1] == ' ') { // If the character before the newline is a space
+            longText[i - 1] = '\n';  // Replace it with a newline
+            longText.insert(i, " "); // Insert a space after the newline
+        } else {
+            longText.insert(i, "\n"); // Insert a newline
+        }
+    }
+    return longText;
+}

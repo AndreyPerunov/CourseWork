@@ -152,7 +152,9 @@ std::string Follows::readOneById() {
 
 			table << fort::header
 				<< "ID" << "Follower Id" << "Follower" << "Following Id" << "Following" << fort::endr
-				<< follow.id << follow.followerId << users.getUsernameById(follow.followerId) << follow.followingId << users.getUsernameById(follow.followingId) << fort::endr;
+				<< follow.id << follow.followerId << users.getUsernameById(follow.followerId) << follow.followingId << users.getUsernameById(follow.followingId) << fort::endr << fort::separator;
+
+			table.row(0).set_cell_bg_color(fort::color::yellow);
 
 			return table.to_string();
 		}
@@ -173,8 +175,10 @@ std::string Follows::readAllById() {
 
 	// Set Content
 	for (Follow follow : Follows::follows) {
-		table << follow.id << follow.followerId << users.getUsernameById(follow.followerId) << follow.followingId << users.getUsernameById(follow.followingId) << fort::endr;
+		table << follow.id << follow.followerId << users.getUsernameById(follow.followerId) << follow.followingId << users.getUsernameById(follow.followingId) << fort::endr << fort::separator;
 	}
+
+	table.row(0).set_cell_bg_color(fort::color::yellow);
 
 	return table.to_string();
 }
@@ -198,8 +202,10 @@ std::string Follows::readAllByFollowerId() {
 
 	// Set Content
 	for (Follow follow : copyFollows) {
-		table << follow.id << follow.followerId << users.getUsernameById(follow.followerId) << follow.followingId << users.getUsernameById(follow.followingId) << fort::endr;
+		table << follow.id << follow.followerId << users.getUsernameById(follow.followerId) << follow.followingId << users.getUsernameById(follow.followingId) << fort::endr << fort::separator;
 	}
+
+	table.row(0).set_cell_bg_color(fort::color::yellow);
 
 	return table.to_string();
 }
@@ -223,8 +229,10 @@ std::string Follows::readAllByFollowingId() {
 
 	// Set Content
 	for (Follow follow : copyFollows) {
-		table << follow.id << follow.followerId << users.getUsernameById(follow.followerId) << follow.followingId << users.getUsernameById(follow.followingId) << fort::endr;
+		table << follow.id << follow.followerId << users.getUsernameById(follow.followerId) << follow.followingId << users.getUsernameById(follow.followingId) << fort::endr << fort::separator;
 	}
+
+	table.row(0).set_cell_bg_color(fort::color::yellow);
 
 	return table.to_string();
 }

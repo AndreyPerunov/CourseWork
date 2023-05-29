@@ -7,5 +7,6 @@
 
 std::string colored(std::string text, std::string color);
 char* stoc(std::string string);
+std::string cropLongText(std::string longText);
 
 #endif // !_FUNCTIONS_H_

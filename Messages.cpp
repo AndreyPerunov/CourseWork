@@ -143,7 +143,9 @@ std::string Messages::readOneById() {
 
 			table << fort::header
 				<< "ID" << "From ID" << "From" << "To ID" << "To" << "Message" << fort::endr
-				<< message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << message.message << fort::endr;
+				<< message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << cropLongText(message.message) << fort::endr << fort::separator;
+
+			table.row(0).set_cell_bg_color(fort::color::magenta);
 
 			return table.to_string();
 		}
@@ -164,8 +166,10 @@ std::string Messages::readAllById() {
 
 	// Set Content
 	for (Message message : Messages::messages) {
-		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << message.message << fort::endr;
+		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << cropLongText(message.message) << fort::endr << fort::separator;
 	}
+
+	table.row(0).set_cell_bg_color(fort::color::magenta);
 
 	return table.to_string();
 }
@@ -189,8 +193,10 @@ std::string Messages::readAllByFromId() {
 
 	// Set Content
 	for (Message message: copyMessages) {
-		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << message.message << fort::endr;
+		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << cropLongText(message.message) << fort::endr << fort::separator;
 	}
+
+	table.row(0).set_cell_bg_color(fort::color::magenta);
 
 	return table.to_string();
 }
@@ -214,8 +220,10 @@ std::string Messages::readAllByToId() {
 
 	// Set Content
 	for (Message message : copyMessages) {
-		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << message.message << fort::endr;
+		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << cropLongText(message.message) << fort::endr << fort::separator;
 	}
+
+	table.row(0).set_cell_bg_color(fort::color::magenta);
 
 	return table.to_string();
 }
@@ -239,9 +247,11 @@ std::string Messages::readAllByMessages() {
 
 	// Set Content
 	for (Message message : copyMessages) {
-		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << message.message << fort::endr;
+		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << cropLongText(message.message) << fort::endr << fort::separator;
 	}
 
+	table.row(0).set_cell_bg_color(fort::color::magenta);
+	
 	return table.to_string();
 }
 

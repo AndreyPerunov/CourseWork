@@ -189,7 +189,9 @@ std::string Posts::readOneById() {
 
 			table << fort::header
 				<< "ID" << "Title" << "Body" << "Author ID" << "Author" << "Likes" << fort::endr
-				<< post.id << post.title << post.body << post.authorId << users.getUsernameById(post.authorId) << postsLikes.getLikesCount(post.id) << fort::endr;
+				<< post.id << post.title << cropLongText(post.body) << post.authorId << users.getUsernameById(post.authorId) << postsLikes.getLikesCount(post.id) << fort::endr << fort::separator;
+
+			table.row(0).set_cell_bg_color(fort::color::cyan);
 
 			return table.to_string();
 		}
@@ -211,9 +213,11 @@ std::string Posts::readAllById() {
 
 	// Set Content
 	for (Post post : Posts::posts) {
-		table << post.id << post.title << post.body << post.authorId << users.getUsernameById(post.authorId) << postsLikes.getLikesCount(post.id) << fort::endr;
+		table << post.id << post.title << cropLongText(post.body) << post.authorId << users.getUsernameById(post.authorId) << postsLikes.getLikesCount(post.id) << fort::endr << fort::separator;
 	}
-
+	
+	table.row(0).set_cell_bg_color(fort::color::cyan);
+	
 	return table.to_string();
 }
 
@@ -237,8 +241,10 @@ std::string Posts::readAllByTitle() {
 
 	// Set Content
 	for (Post post : copyPosts) {
-		table << post.id << post.title << post.body << post.authorId << users.getUsernameById(post.authorId) << postsLikes.getLikesCount(post.id) << fort::endr;
+		table << post.id << post.title << cropLongText(post.body) << post.authorId << users.getUsernameById(post.authorId) << postsLikes.getLikesCount(post.id) << fort::endr << fort::separator;
 	}
+
+	table.row(0).set_cell_bg_color(fort::color::cyan);
 
 	return table.to_string();
 }
@@ -263,8 +269,10 @@ std::string Posts::readAllByBody() {
 
 	// Set Content
 	for (Post post : copyPosts) {
-		table << post.id << post.title << post.body << post.authorId << users.getUsernameById(post.authorId) << postsLikes.getLikesCount(post.id) << fort::endr;
+		table << post.id << post.title << cropLongText(post.body) << post.authorId << users.getUsernameById(post.authorId) << postsLikes.getLikesCount(post.id) << fort::endr << fort::separator;
 	}
+
+	table.row(0).set_cell_bg_color(fort::color::cyan);
 
 	return table.to_string();
 }
@@ -289,8 +297,10 @@ std::string Posts::readAllByAuthorId() {
 
 	// Set Content
 	for (Post post : copyPosts) {
-		table << post.id << post.title << post.body << post.authorId << users.getUsernameById(post.authorId) << postsLikes.getLikesCount(post.id) << fort::endr;
+		table << post.id << post.title << cropLongText(post.body) << post.authorId << users.getUsernameById(post.authorId) << postsLikes.getLikesCount(post.id) << fort::endr << fort::separator;
 	}
+
+	table.row(0).set_cell_bg_color(fort::color::cyan);
 
 	return table.to_string();
 }
