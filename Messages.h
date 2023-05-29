@@ -35,6 +35,8 @@ class Messages {
 		std::string deleteAllByFromId(int userId);
 		std::string deleteAllByToId();
 		std::string deleteAllByToId(int userId);
+		std::string getNumberOfMessages();
+		std::string getNumberOfMessagesSentYourself();
 	private:
 		std::vector<Message> messages;
 		std::string path;

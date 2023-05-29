@@ -392,10 +392,10 @@ SocialMedia::SocialMedia(std::string title) {
 
             // SUMMARY
             if (selectedOption == "/Messages/summary/get number of messages") {
-                //TODO: flashMessage = messages.getNumberOfMessages();
+                flashMessage = messages.getNumberOfMessages();
             }
             if (selectedOption == "/Messages/summary/get number of messages sent to yourself") {
-                //TODO: flashMessage = messages.getNumberOfMessagesSentYourself();
+                flashMessage = messages.getNumberOfMessagesSentYourself();
             }
 
             ///////////////////////

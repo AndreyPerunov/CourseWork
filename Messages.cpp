@@ -375,3 +375,35 @@ std::string Messages::deleteAllByToId(int userId) {
 	Messages::save();
 	return message;
 }
+
+// Summary
+std::string Messages::getNumberOfMessages() {
+	std::string output = "There is " + colored(std::to_string(Messages::messages.size()), "blue");
+
+  if (Messages::messages.size() == 1) {
+    output += " message.";
+  } else {
+  	output += " messages.";
+  }
+
+  return output;
+}
+
+std::string Messages::getNumberOfMessagesSentYourself() {
+	int count = 0;
+  for (Message message : Messages::messages) {
+  	if(message.fromId == message.toId) {
+      count++;
+    }
+  }
+
+	std::string output = "There is " + colored(std::to_string(count), "blue");
+
+  if (count == 1) {
+    output += " message sent to yourself.";
+  } else {
+  	output += " messages sent to yourself.";
+  }
+
+  return output;
+}
