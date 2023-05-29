@@ -34,6 +34,8 @@ class Posts {
 		std::string deleteOneById();
 		std::string deleteAllByAythorId();
 		std::string deleteAllByAythorId(int authorId);
+		std::string getNumberOfPosts();
+		std::string getNumberOfPostsWithLikes();
 		int getPostsCount(int authorId);
 		bool idExists(int id);
 		std::string getTitleById(int id);
@@ -45,6 +47,7 @@ class Posts {
 		char* getTitle();
 		char* getBody();
 		int getAuthorId();
+		int getLikes();
 };
 
 #endif // !_POSTS_H_

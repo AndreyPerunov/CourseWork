@@ -119,6 +119,22 @@ int Posts::getAuthorId() {
 	return stoi(id);
 }
 
+int Posts::getLikes() {
+	std::string id;
+	std::regex pattern("[0-9]+");
+	while (true) {
+		std::cout << "Enter " << colored("number of likes", "blue") << ": ";
+		std::getline(std::cin, id);
+		if (!std::regex_match(id, pattern)) {
+			std::cout << colored("Number of likes contains only numbers.", "red") << '\n';
+		}
+		else {
+			break;
+		}
+	}
+	return stoi(id);
+}
+
 int Posts::getId() {
 	std::string id;
 	std::regex pattern("[0-9]+");
@@ -407,4 +423,40 @@ std::string Posts::deleteAllByAythorId(int authorId) {
 	}
 	Posts::save();
 	return message;
+}
+
+// Summary
+std::string Posts::getNumberOfPosts() {
+	std::string output = "There is " + colored(std::to_string(Posts::posts.size()), "blue");
+
+    if (Posts::posts.size() == 1) {
+        output += " post.";
+    } else {
+        output += " posts.";
+    }
+
+    return output;
+}
+
+std::string Posts::getNumberOfPostsWithLikes() {
+	PostsLikes postsLikes(Posts::path);
+
+  int minLikes = Posts::getLikes();
+
+  int count = 0;
+  for (Post post : Posts::posts) {
+  	if(minLikes < postsLikes.getLikesCount(post.id)) {
+      count++;
+    }
+  }
+
+  std::string output = "There is " + colored(std::to_string(count), "blue");
+
+  if (count == 1) {
+    output += " post with likes more than " + std::to_string(minLikes) + ".";
+  } else {
+    output += " posts with likes more than " + std::to_string(minLikes) + ".";
+  }
+
+  return output;
 }

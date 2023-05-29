@@ -107,7 +107,7 @@ SocialMedia::SocialMedia(std::string title) {
         // Creating directory
         try {
             if (!fs::create_directory(folderPath)) {
-                flashMessage = colored("Database '" + title + "' already exists.", "yellow");
+                flashMessage = colored("You have entered into an existing database '" + title + "'.", "yellow");
             }
             else {
                 flashMessage = colored("Database '" + title + "' have been created.", "green");
@@ -255,10 +255,10 @@ SocialMedia::SocialMedia(std::string title) {
 
             // SUMMARY
             if (selectedOption == "/Posts/summary/get number of posts") {
-                //TODO: flashMessage = posts.getNumberOfPosts();
+                flashMessage = posts.getNumberOfPosts();
             }
             if (selectedOption == "/Posts/summary/get number of posts where number of likes is bigger than...") {
-                //TODO: flashMessage = posts.getNumberOfPostsWithLikes();
+                flashMessage = posts.getNumberOfPostsWithLikes();
             }
 
             ///////////////////////
