@@ -249,6 +249,71 @@ std::string PostsLikes::readAllByUserId() {
 	return table.to_string();
 }
 
+// Filter
+
+std::string PostsLikes::filterByPostId() {
+	Users users(PostsLikes::path);
+	Posts posts(PostsLikes::path);
+
+	int postId = getPostId();
+
+	std::vector<PostLike> filteredPostsLikes;
+
+	for (PostLike postLike : PostsLikes::postsLikes) {
+		if (postLike.postId == postId) {
+			filteredPostsLikes.push_back(postLike);
+		}
+	}
+
+	// Create a table
+	fort::char_table table;
+
+	// Set Header
+	table << fort::header
+		<< "ID" << "Post ID" << "Title" << "User Id" << "Username" << fort::endr;
+
+	// Set Content
+	for (PostLike postLike : filteredPostsLikes) {
+		table << postLike.id << postLike.postId << posts.getTitleById(postLike.postId) << postLike.userId << users.getUsernameById(postLike.userId) << fort::endr;
+	}
+
+	table.row(0).set_cell_bg_color(fort::color::light_red);
+
+	return table.to_string();
+}
+
+std::string PostsLikes::filterByUserId() {
+	Users users(PostsLikes::path);
+	Posts posts(PostsLikes::path);
+
+	int userId = getUserId();
+
+	std::vector<PostLike> filteredPostsLikes;
+
+	for (PostLike postLike : PostsLikes::postsLikes) {
+		if (postLike.userId == userId) {
+			filteredPostsLikes.push_back(postLike);
+		}
+	}
+
+	// Create a table
+	fort::char_table table;
+
+	// Set Header
+	table << fort::header
+		<< "ID" << "Post ID" << "Title" << "User Id" << "Username" << fort::endr;
+
+	// Set Content
+	for (PostLike postLike : filteredPostsLikes) {
+		table << postLike.id << postLike.postId << posts.getTitleById(postLike.postId) << postLike.userId << users.getUsernameById(postLike.userId) << fort::endr;
+	}
+
+	table.row(0).set_cell_bg_color(fort::color::light_red);
+
+	return table.to_string();
+}
+
+
 // Delete One
 std::string PostsLikes::deleteOneById() {
 	std::cout << PostsLikes::readAllById();

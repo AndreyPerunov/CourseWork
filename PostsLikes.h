@@ -28,6 +28,8 @@ class PostsLikes {
 		std::string readAllById();
 		std::string readAllByPostId();
 		std::string readAllByUserId();
+		std::string filterByPostId();
+		std::string filterByUserId();
 		std::string deleteOneById();
 		std::string deleteAllByPostId();
 		std::string deleteAllByPostId(int postId);

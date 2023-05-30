@@ -59,8 +59,8 @@ Menu* SocialMedia::buildMenu(std::string title) {
     readAllPostsLikes->addChild("sort by post id");
     readAllPostsLikes->addChild("sort by user id");
     Menu* filterPostsLikes = postsLikes->addChild("filter");
-    filterPostsLikes->addChild("by post id"); //TODO
-    filterPostsLikes->addChild("by user id"); //TODO
+    filterPostsLikes->addChild("by post id");
+    filterPostsLikes->addChild("by user id");
     postsLikes->addChild("deleteOne")->addChild("by id");
     Menu* deleteAllPostsLikes = postsLikes->addChild("deleteAll");
     deleteAllPostsLikes->addChild("by user id");
@@ -314,6 +314,14 @@ SocialMedia::SocialMedia(std::string title) {
             }
             if (selectedOption == "/Posts Likes/readAll/sort by user id") {
                 flashMessage = postsLikes.readAllByUserId();
+            }
+
+            // FILTER
+            if (selectedOption == "/Posts Likes/filter/by post id") {
+                flashMessage = postsLikes.filterByPostId();
+            }
+            if (selectedOption == "/Posts Likes/filter/by user id") {
+                flashMessage = postsLikes.filterByUserId();
             }
 
             // DELETE ONE
