@@ -321,6 +321,38 @@ std::string Posts::readAllByAuthorId() {
 	return table.to_string();
 }
 
+// Filter
+std::string Posts::filterByAuthorId(){
+	PostsLikes postsLikes(Posts::path);
+	Users users(Posts::path);
+
+	int authorId = getAuthorId();
+
+	std::vector<Post> filteredPosts;
+
+	for (Post post : Posts::posts) {
+		if (post.authorId == authorId) {
+			filteredPosts.push_back(post);
+		}
+	}
+
+	// Create a table
+	fort::char_table table;
+
+	// Set Header
+	table << fort::header
+		<< "ID" << "Title" << "Body" << "Author ID" << "Author" << "Likes" << fort::endr;
+
+	// Set Content
+	for (Post post : filteredPosts) {
+		table << post.id << post.title << cropLongText(post.body) << post.authorId << users.getUsernameById(post.authorId) << postsLikes.getLikesCount(post.id) << fort::endr << fort::separator;
+	}
+
+	table.row(0).set_cell_bg_color(fort::color::cyan);
+
+	return table.to_string();
+}
+
 // Update
 std::string Posts::updateById() {
 	std::cout << Posts::readAllById();

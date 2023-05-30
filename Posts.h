@@ -30,6 +30,7 @@ class Posts {
 		std::string readAllByTitle();
 		std::string readAllByBody();
 		std::string readAllByAuthorId();
+		std::string filterByAuthorId();
 		std::string updateById();
 		std::string deleteOneById();
 		std::string deleteAllByAythorId();

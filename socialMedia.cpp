@@ -42,7 +42,7 @@ Menu* SocialMedia::buildMenu(std::string title) {
     readAllPosts->addChild("sort by body");
     readAllPosts->addChild("sort by author id");
     Menu* filterPosts = posts->addChild("filter");
-    filterPosts->addChild("by author id"); //TODO
+    filterPosts->addChild("by author id");
     posts->addChild("update")->addChild("by id");
     posts->addChild("deleteOne")->addChild("by id");
     posts->addChild("deleteAll")->addChild("by author id");
@@ -260,6 +260,11 @@ SocialMedia::SocialMedia(std::string title) {
             }
             if (selectedOption == "/Posts/readAll/sort by author id") {
                 flashMessage = posts.readAllByAuthorId();
+            }
+
+            // FILTER
+            if (selectedOption == "/Posts/filter/by author id") {
+                flashMessage = posts.filterByAuthorId();
             }
 
             // UPDATE
