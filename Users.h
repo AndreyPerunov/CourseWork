@@ -26,7 +26,6 @@ class Users {
 	public:
 		Users(std::string path);
 		std::string create();
-		std::string save();
 		std::string readOneById();
 		std::string readOneByUsername();
 		std::string readOneByEmail();
@@ -52,6 +51,7 @@ class Users {
 		std::vector<User> users;
 		std::string path;
 		int lastId = 0;
+		std::string save();
 		bool usernameExists(std::string username);
 		bool emailExists(std::string username);
 		int getId();

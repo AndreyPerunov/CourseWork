@@ -22,7 +22,6 @@ class PostsLikes {
 	public:
 		PostsLikes(std::string path);
 		void readData();
-		std::string save();
 		std::string create();
 		std::string readOneById();
 		std::string readAllById();
@@ -41,6 +40,7 @@ class PostsLikes {
 		std::vector<PostLike> postsLikes;
 		std::string path;
 		int lastId = 0;
+		std::string save();
 		int getId();
 		int getPostId();
 		int getUserId();

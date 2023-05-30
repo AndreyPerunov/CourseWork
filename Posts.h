@@ -23,7 +23,6 @@ class Posts {
 	public:
 		Posts(std::string path);
 		void readData();
-		std::string save();
 		std::string create();
 		std::string readOneById();
 		std::string readAllById();
@@ -44,6 +43,7 @@ class Posts {
 		std::vector<Post> posts;
 		std::string path;
 		int lastId = 0;
+		std::string save();
 		int getId();
 		char* getTitle();
 		char* getBody();
