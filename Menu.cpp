@@ -12,14 +12,14 @@ Menu::Menu(std::string data, Menu* parent) {
 
 Menu* Menu::addChild(std::string data) {
     Menu* child = new Menu(data, this);
-    children.push_back(child);
+    Menu::children.push_back(child);
     return child;
 }
 
 void Menu::addGoBack(std::string data) {
     Menu* child = new Menu(data, this);
     child->goBack = true;
-    children.push_back(child);
+    Menu::children.push_back(child);
 }
 
 std::string Menu::navigate() {
@@ -131,11 +131,11 @@ std::string Menu::navigate(std::string &flashMessage) {
 }
 
 void Menu::displayChildren(size_t selectedOption) {
-    for (size_t i = 0; i < children.size(); ++i) {
+    for (size_t i = 0; i < Menu::children.size(); ++i) {
         if (selectedOption == i) {
-            std::cout << colored('>'+children[i]->data, "green") << '\n';
+            std::cout << colored('>'+Menu::children[i]->data, "green") << '\n';
         } else {
-            std::cout << ' ' << children[i]->data << '\n';
+            std::cout << ' ' << Menu::children[i]->data << '\n';
         }
     }
 }
