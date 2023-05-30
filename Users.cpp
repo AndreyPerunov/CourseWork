@@ -368,6 +368,100 @@ std::string Users::readAllByEmail() {
     return table.to_string();
 }
 
+// Filter
+std::string Users::filterWithPosts() {
+    int minPosts = Users::getNumber("number of posts");
+
+    Posts posts(Users::path);
+    Follows follows(Users::path);
+
+    std::vector<User> filteredUsers;
+
+    for (User user : Users::users) {
+        if (posts.getPostsCount(user.id) > minPosts) {
+            filteredUsers.push_back(user);
+        }
+    }
+
+    // Create a table
+    fort::char_table table;
+
+    // Set Header
+    table << fort::header
+        << "ID" << "Username" << "Password" << "Email" << "Posts" << "Followers" << "Following" << fort::endr;
+
+    // Set Content
+    for (User user : filteredUsers) {
+        table << user.id << user.username << cropLongText(user.password) << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr << fort::separator;
+    }
+
+    table.row(0).set_cell_bg_color(fort::color::blue);
+
+    return table.to_string();
+}
+
+std::string Users::filterWithFollowers() {
+    int minFollowers = Users::getNumber("number of followers");
+
+    Posts posts(Users::path);
+    Follows follows(Users::path);
+
+    std::vector<User> filteredUsers;
+
+    for (User user : Users::users) {
+        if (follows.getFollowersCount(user.id) > minFollowers) {
+            filteredUsers.push_back(user);
+        }
+    }
+
+    // Create a table
+    fort::char_table table;
+
+    // Set Header
+    table << fort::header
+        << "ID" << "Username" << "Password" << "Email" << "Posts" << "Followers" << "Following" << fort::endr;
+
+    // Set Content
+    for (User user : filteredUsers) {
+        table << user.id << user.username << cropLongText(user.password) << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr << fort::separator;
+    }
+
+    table.row(0).set_cell_bg_color(fort::color::blue);
+
+    return table.to_string();
+}
+
+std::string Users::filterWithFollowing() {
+    int minFollowing = Users::getNumber("number of following");
+
+    Posts posts(Users::path);
+    Follows follows(Users::path);
+
+    std::vector<User> filteredUsers;
+
+    for (User user : Users::users) {
+        if (follows.getFollowingCount(user.id) > minFollowing) {
+            filteredUsers.push_back(user);
+        }
+    }
+
+    // Create a table
+    fort::char_table table;
+
+    // Set Header
+    table << fort::header
+        << "ID" << "Username" << "Password" << "Email" << "Posts" << "Followers" << "Following" << fort::endr;
+
+    // Set Content
+    for (User user : filteredUsers) {
+        table << user.id << user.username << cropLongText(user.password) << user.email << posts.getPostsCount(user.id) << follows.getFollowersCount(user.id) << follows.getFollowingCount(user.id) << fort::endr << fort::separator;
+    }
+
+    table.row(0).set_cell_bg_color(fort::color::blue);
+
+    return table.to_string();
+}
+
 // Update
 std::string Users::updateById() {
     std::cout << Users::readAllById();

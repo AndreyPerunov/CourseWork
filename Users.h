@@ -33,6 +33,9 @@ class Users {
 		std::string readAllById();
 		std::string readAllByUsername();
 		std::string readAllByEmail();
+		std::string filterWithPosts();
+		std::string filterWithFollowers();
+		std::string filterWithFollowing();
 		std::string updateById();
 		std::string updateByUsername();
 		std::string updateByEmail();

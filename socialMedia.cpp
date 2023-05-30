@@ -14,6 +14,10 @@ Menu* SocialMedia::buildMenu(std::string title) {
     readAllUsers->addChild("sort by id");
     readAllUsers->addChild("sort by username");
     readAllUsers->addChild("sort by email");
+    Menu* filterUsers = users->addChild("filter");
+    filterUsers->addChild("get users with posts more than...");
+    filterUsers->addChild("get users with followers more than...");
+    filterUsers->addChild("get users with following more than...");
     Menu* updateUser = users->addChild("update");
     updateUser->addChild("by id");
     updateUser->addChild("by username");
@@ -37,12 +41,14 @@ Menu* SocialMedia::buildMenu(std::string title) {
     readAllPosts->addChild("sort by title");
     readAllPosts->addChild("sort by body");
     readAllPosts->addChild("sort by author id");
+    Menu* filterPosts = posts->addChild("filter");
+    filterPosts->addChild("by author id"); //TODO
     posts->addChild("update")->addChild("by id");
     posts->addChild("deleteOne")->addChild("by id");
     posts->addChild("deleteAll")->addChild("by author id");
     Menu* summaryPosts = posts->addChild("summary");
     summaryPosts->addChild("get number of posts");
-    summaryPosts->addChild("get number of posts where number of likes is bigger than...");
+    summaryPosts->addChild("get number of posts with likes more than...");
     posts->addGoBack("Go back");
 
     Menu* postsLikes = root->addChild("Posts Likes");
@@ -52,6 +58,9 @@ Menu* SocialMedia::buildMenu(std::string title) {
     readAllPostsLikes->addChild("sort by id");
     readAllPostsLikes->addChild("sort by post id");
     readAllPostsLikes->addChild("sort by user id");
+    Menu* filterPostsLikes = postsLikes->addChild("filter");
+    filterPostsLikes->addChild("by post id"); //TODO
+    filterPostsLikes->addChild("by user id"); //TODO
     postsLikes->addChild("deleteOne")->addChild("by id");
     Menu* deleteAllPostsLikes = postsLikes->addChild("deleteAll");
     deleteAllPostsLikes->addChild("by user id");
@@ -67,6 +76,9 @@ Menu* SocialMedia::buildMenu(std::string title) {
     readAllFollows->addChild("sort by id");
     readAllFollows->addChild("sort by follower id");
     readAllFollows->addChild("sort by following id");
+    Menu* filterFollows = follows->addChild("filter");
+    filterFollows->addChild("by follower id"); //TODO
+    filterFollows->addChild("by following id"); //TODO
     follows->addChild("deleteOne")->addChild("by id");
     Menu* deleteAllFollows= follows->addChild("deleteAll");
     deleteAllFollows->addChild("by follower id");
@@ -83,6 +95,9 @@ Menu* SocialMedia::buildMenu(std::string title) {
     readAllMessages->addChild("sort by from id");
     readAllMessages->addChild("sort by to id");
     readAllMessages->addChild("sort by message");
+    Menu* filterMessages = messages->addChild("filter");
+    filterMessages->addChild("by from id"); //TODO
+    filterMessages->addChild("by to id"); //TODO
     messages->addChild("update")->addChild("by id");
     messages->addChild("deleteOne")->addChild("by id");
     Menu* deleteAllMessages = messages->addChild("deleteAll");
@@ -159,6 +174,17 @@ SocialMedia::SocialMedia(std::string title) {
             }
             if (selectedOption == "/Users/readAll/sort by email") {
                 flashMessage = users.readAllByEmail();
+            }
+
+            // FILTER
+            if (selectedOption == "/Users/filter/get users with posts more than...") {
+                flashMessage = users.filterWithPosts();
+            }
+            if (selectedOption == "/Users/filter/get users with followers more than...") {
+                flashMessage = users.filterWithFollowers();
+            }
+            if (selectedOption == "/Users/filter/get users with following more than...") {
+                flashMessage = users.filterWithFollowing();
             }
 
             // UPDATE
@@ -257,7 +283,7 @@ SocialMedia::SocialMedia(std::string title) {
             if (selectedOption == "/Posts/summary/get number of posts") {
                 flashMessage = posts.getNumberOfPosts();
             }
-            if (selectedOption == "/Posts/summary/get number of posts where number of likes is bigger than...") {
+            if (selectedOption == "/Posts/summary/get number of posts with likes more than...") {
                 flashMessage = posts.getNumberOfPostsWithLikes();
             }
 
