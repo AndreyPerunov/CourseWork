@@ -30,6 +30,26 @@ Users::Users(std::string path) {
 	}
 }
 
+std::string Users::save() {
+    std::string filename = "user.bin";
+    std::ofstream usersFile(Users::path + filename, std::ios::binary);
+
+    if (!usersFile.is_open()) {
+        return colored("Error opening file " + filename + "!", "red");
+    }
+
+    for (User user : Users::users) {
+        usersFile.write((char*)&user.id, sizeof(user.id));
+        usersFile.write(user.username, sizeof(user.username));
+        usersFile.write(user.password, sizeof(user.password));
+        usersFile.write(user.email, sizeof(user.email));
+    }
+
+    usersFile.close();
+
+    return colored("Users were saved successfully.", "green");
+}
+
 bool Users::usernameExists(std::string username) {
     for (User user : Users::users) {
         if (user.username == username) return true;
@@ -676,26 +696,6 @@ std::string Users::deleteByEmail(){
     }
 
     return colored("User does not exist.", "red");
-}
-
-std::string Users::save() {
-    std::string filename = "user.bin";
-    std::ofstream usersFile(Users::path + filename, std::ios::binary);
-
-    if (!usersFile.is_open()) {
-        return colored("Error opening file " + filename + "!", "red");
-    }
-
-    for (User user : Users::users) {
-        usersFile.write((char*)&user.id, sizeof(user.id));
-        usersFile.write(user.username, sizeof(user.username));
-        usersFile.write(user.password, sizeof(user.password));
-        usersFile.write(user.email, sizeof(user.email));
-    }
-
-    usersFile.close();
-
-    return colored("Users were saved successfully.", "green");
 }
 
 // Summary
