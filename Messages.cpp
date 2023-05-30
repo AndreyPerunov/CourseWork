@@ -255,6 +255,66 @@ std::string Messages::readAllByMessages() {
 	return table.to_string();
 }
 
+std::string Messages::filterByFromId() {
+	Users users(Messages::path);
+
+	int fromId = getUserId("from id");
+
+	std::vector<Message> filteredMessages;
+
+	for (Message message : Messages::messages) {
+		if (message.fromId == fromId) {
+			filteredMessages.push_back(message);
+		}
+	}
+
+	// Create a table
+	fort::char_table table;
+
+	// Set Header
+	table << fort::header
+		<< "ID" << "From ID" << "From" << "To ID" << "To" << "Message" << fort::endr;
+
+	// Set Content
+	for (Message message: filteredMessages) {
+		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << cropLongText(message.message) << fort::endr << fort::separator;
+	}
+
+	table.row(0).set_cell_bg_color(fort::color::magenta);
+
+	return table.to_string();
+}
+
+std::string Messages::filterByToId() {
+	Users users(Messages::path);
+
+	int toId = getUserId("to id");
+
+	std::vector<Message> filteredMessages;
+
+	for (Message message : Messages::messages) {
+		if (message.toId == toId) {
+			filteredMessages.push_back(message);
+		}
+	}
+
+	// Create a table
+	fort::char_table table;
+
+	// Set Header
+	table << fort::header
+		<< "ID" << "From ID" << "From" << "To ID" << "To" << "Message" << fort::endr;
+
+	// Set Content
+	for (Message message: filteredMessages) {
+		table << message.id << message.fromId << users.getUsernameById(message.fromId) << message.toId << users.getUsernameById(message.toId) << cropLongText(message.message) << fort::endr << fort::separator;
+	}
+
+	table.row(0).set_cell_bg_color(fort::color::magenta);
+
+	return table.to_string();
+}
+
 // Update
 std::string Messages::updateById() {
 	std::cout << Messages::readAllById();

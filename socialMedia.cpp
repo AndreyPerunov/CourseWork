@@ -96,8 +96,8 @@ Menu* SocialMedia::buildMenu(std::string title) {
     readAllMessages->addChild("sort by to id");
     readAllMessages->addChild("sort by message");
     Menu* filterMessages = messages->addChild("filter");
-    filterMessages->addChild("by from id"); //TODO
-    filterMessages->addChild("by to id"); //TODO
+    filterMessages->addChild("by from id");
+    filterMessages->addChild("by to id");
     messages->addChild("update")->addChild("by id");
     messages->addChild("deleteOne")->addChild("by id");
     Menu* deleteAllMessages = messages->addChild("deleteAll");
@@ -417,6 +417,14 @@ SocialMedia::SocialMedia(std::string title) {
             }
             if (selectedOption == "/Messages/readAll/sort by message") {
                 flashMessage = messages.readAllByMessages();
+            }
+
+            // FILTER
+            if (selectedOption == "/Messages/filter/by from id") {
+                flashMessage = messages.filterByFromId();
+            }
+            if (selectedOption == "/Messages/filter/by to id") {
+                flashMessage = messages.filterByToId();
             }
 
             // UPDATE

@@ -29,6 +29,8 @@ class Messages {
 		std::string readAllByFromId();
 		std::string readAllByToId();
 		std::string readAllByMessages();
+		std::string filterByFromId();
+		std::string filterByToId();
 		std::string updateById();
 		std::string deleteOneById();
 		std::string deleteAllByFromId();
