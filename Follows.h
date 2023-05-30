@@ -26,6 +26,8 @@ class Follows {
 		std::string readAllById();
 		std::string readAllByFollowerId();
 		std::string readAllByFollowingId();
+		std::string filterByFollowerId();
+		std::string filterByFollowingId();
 		std::string deleteOneById();
 		std::string deleteAllByFollowerId();
 		std::string deleteAllByFollowerId(int userId);

@@ -237,6 +237,67 @@ std::string Follows::readAllByFollowingId() {
 	return table.to_string();
 }
 
+// Filter
+std::string Follows::filterByFollowerId() {
+	Users users(Follows::path);
+
+	int followerId = getUserId("follower id");
+
+	std::vector<Follow> filteredFollows;
+
+	for (Follow follow : Follows::follows) {
+		if (follow.followerId == followerId) {
+			filteredFollows.push_back(follow);
+		}
+	}
+
+	// Create a table
+	fort::char_table table;
+
+	// Set Header
+	table << fort::header
+		<< "ID" << "Follower Id" << "Follower" << "Following Id" << "Following" << fort::endr;
+
+	// Set Content
+	for (Follow follow : filteredFollows) {
+		table << follow.id << follow.followerId << users.getUsernameById(follow.followerId) << follow.followingId << users.getUsernameById(follow.followingId) << fort::endr << fort::separator;
+	}
+
+	table.row(0).set_cell_bg_color(fort::color::yellow);
+
+	return table.to_string();
+}
+
+std::string Follows::filterByFollowingId() {
+	Users users(Follows::path);
+
+	int followingId = getUserId("following id");
+
+	std::vector<Follow> filteredFollows;
+
+	for (Follow follow : Follows::follows) {
+		if (follow.followingId == followingId) {
+			filteredFollows.push_back(follow);
+		}
+	}
+
+	// Create a table
+	fort::char_table table;
+
+	// Set Header
+	table << fort::header
+		<< "ID" << "Follower Id" << "Follower" << "Following Id" << "Following" << fort::endr;
+
+	// Set Content
+	for (Follow follow : filteredFollows) {
+		table << follow.id << follow.followerId << users.getUsernameById(follow.followerId) << follow.followingId << users.getUsernameById(follow.followingId) << fort::endr << fort::separator;
+	}
+
+	table.row(0).set_cell_bg_color(fort::color::yellow);
+
+	return table.to_string();
+}
+
 // Delete One
 std::string Follows::deleteOneById() {
 	std::cout << Follows::readAllById();

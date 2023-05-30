@@ -77,8 +77,8 @@ Menu* SocialMedia::buildMenu(std::string title) {
     readAllFollows->addChild("sort by follower id");
     readAllFollows->addChild("sort by following id");
     Menu* filterFollows = follows->addChild("filter");
-    filterFollows->addChild("by follower id"); //TODO
-    filterFollows->addChild("by following id"); //TODO
+    filterFollows->addChild("by follower id");
+    filterFollows->addChild("by following id");
     follows->addChild("deleteOne")->addChild("by id");
     Menu* deleteAllFollows= follows->addChild("deleteAll");
     deleteAllFollows->addChild("by follower id");
@@ -364,6 +364,14 @@ SocialMedia::SocialMedia(std::string title) {
             }
             if (selectedOption == "/Follows/readAll/sort by following id") {
                 flashMessage = follows.readAllByFollowingId();
+            }
+
+            // FILTER
+            if (selectedOption == "/Follows/filter/by follower id") {
+                flashMessage = follows.filterByFollowerId();
+            }
+            if (selectedOption == "/Follows/filter/by following id") {
+                flashMessage = follows.filterByFollowingId();
             }
 
             // DELETE ONE
