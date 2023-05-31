@@ -63,6 +63,9 @@ int Follows::getUserId(std::string whatToGet) {
 		if (!std::regex_match(id, pattern)) {
 			std::cout << colored("ID contains only numbers.", "red") << '\n';
 		}
+		else if (id.length() >= 10) {
+      std::cout << colored("ID cannot exceed 999999999.", "red") << '\n';
+    }
 		else if (!users.idExists(stoi(id))) {
 			std::cout << colored("User with id " + id + " does not exists.", "red") << '\n';
 		}
@@ -82,6 +85,9 @@ int Follows::getId() {
 		if (!std::regex_match(id, pattern)) {
 			std::cout << colored("ID contains only numbers.", "red") << '\n';
 		}
+		else if (id.length() >= 10) {
+      std::cout << colored("ID cannot exceed 999999999.", "red") << '\n';
+    }
 		else {
 			break;
 		}

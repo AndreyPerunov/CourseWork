@@ -109,6 +109,9 @@ int Posts::getAuthorId() {
 		if (!std::regex_match(id, pattern)) {
 			std::cout << colored("ID contains only numbers.", "red") << '\n';
 		}
+		else if (id.length() >= 10) {
+      std::cout << colored("ID cannot exceed 999999999.", "red") << '\n';
+    }
 		else if (!users.idExists(stoi(id))) {
 			std::cout << colored("User with id " + id + " does not exists.", "red") << '\n';
 		}
@@ -128,6 +131,9 @@ int Posts::getLikes() {
 		if (!std::regex_match(id, pattern)) {
 			std::cout << colored("Number of likes contains only numbers.", "red") << '\n';
 		}
+		else if (id.length() >= 10) {
+      std::cout << colored("Number of likes cannot exceed 999999999.", "red") << '\n';
+    }
 		else {
 			break;
 		}
@@ -144,6 +150,9 @@ int Posts::getId() {
 		if (!std::regex_match(id, pattern)) {
 			std::cout << colored("ID contains only numbers.", "red") << '\n';
 		}
+		else if (id.length() >= 10) {
+      std::cout << colored("ID cannot exceed 999999999.", "red") << '\n';
+    }
 		else {
 			break;
 		}
@@ -420,7 +429,7 @@ std::string Posts::deleteAllByAythorId() {
 			std::string title = it->title;
 			int id = it->id;
 			it = Posts::posts.erase(it);
-			message += colored(std::string("Post ") + title + " has been deleted.\n", "green") + postsLikes.deleteAllByPostId(id) + '\n';
+			message += colored(std::string("Post ") + title + " has been deleted.\n", "green") + postsLikes.deleteAllByPostId(id);
 		}
 		else {
 			++it;
@@ -443,7 +452,7 @@ std::string Posts::deleteAllByAythorId(int authorId) {
 			std::string title = it->title;
 			int id = it->id;
 			it = Posts::posts.erase(it);
-			message += colored(std::string("Post ") + title + " has been deleted.\n", "green") + postsLikes.deleteAllByPostId(id) + '\n';
+			message += colored(std::string("Post ") + title + " has been deleted.\n", "green") + postsLikes.deleteAllByPostId(id);
 		}
 		else {
 			++it;

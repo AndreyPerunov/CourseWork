@@ -73,6 +73,9 @@ int Users::getId() {
         if (!std::regex_match(id, pattern)) {
             std::cout << colored("ID contains only numbers.", "red") << '\n';
         }
+        else if (id.length() >= 10) {
+            std::cout << colored("ID cannot exceed 999999999.", "red") << '\n';
+        }
         else {
             break;
         }
@@ -88,6 +91,9 @@ int Users::getNumber(std::string prompt) {
         std::getline(std::cin, id);
         if (!std::regex_match(id, pattern)) {
             std::cout << colored(prompt + " contains only numbers.", "red") << '\n';
+        }
+        else if (id.length() >= 10) {
+            std::cout << colored(prompt + " cannot exceed 999999999.", "red") << '\n';
         }
         else {
             break;

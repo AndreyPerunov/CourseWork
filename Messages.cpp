@@ -65,6 +65,9 @@ int Messages::getUserId(std::string whatToGet) {
 		if (!std::regex_match(id, pattern)) {
 			std::cout << colored("ID contains only numbers.", "red") << '\n';
 		}
+		else if (id.length() >= 10) {
+      std::cout << colored("ID cannot exceed 999999999.", "red") << '\n';
+    }
 		else if (!users.idExists(stoi(id))) {
 			std::cout << colored("User with id " + id + " does not exists.", "red") << '\n';
 		}
@@ -106,6 +109,9 @@ int Messages::getId() {
 		if (!std::regex_match(id, pattern)) {
 			std::cout << colored("ID contains only numbers.", "red") << '\n';
 		}
+		else if (id.length() >= 10) {
+      std::cout << colored("ID cannot exceed 999999999.", "red") << '\n';
+    }
 		else {
 			break;
 		}
@@ -365,7 +371,7 @@ std::string Messages::deleteAllByFromId() {
 	}
 
 	if (message == "") {
-		return colored("This user has no messages.\n", "red");
+		return colored("This user have not sent any messages.\n", "red");
 	}
 	Messages::save();
 	return message;
@@ -386,7 +392,7 @@ std::string Messages::deleteAllByFromId(int userId) {
 	}
 
 	if (message == "") {
-		return colored("This user has no messages.\n", "red");
+		return colored("This user have not sent any messages.\n", "red");
 	}
 	Messages::save();
 	return message;
@@ -409,7 +415,7 @@ std::string Messages::deleteAllByToId() {
 	}
 
 	if (message == "") {
-		return colored("This user has no messages.\n", "red");
+		return colored("This user have not recieved any messages.\n", "red");
 	}
 	Messages::save();
 	return message;
@@ -430,7 +436,7 @@ std::string Messages::deleteAllByToId(int userId) {
 	}
 
 	if (message == "") {
-		return colored("This user has no messages.\n", "red");
+		return colored("This user have not recieved any messages.\n", "red");
 	}
 	Messages::save();
 	return message;
