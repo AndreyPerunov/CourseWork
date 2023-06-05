@@ -1,4 +1,4 @@
-#include "SocialMedia.h"
+#include "socialMedia.h"
 namespace fs = std::filesystem;
 
 Menu* SocialMedia::buildMenu(std::string title) {
